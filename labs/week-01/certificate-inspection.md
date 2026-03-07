@@ -15,19 +15,19 @@ assets/screenshots/week-01/certificate-inspection.png
 ## Website Information
 
 **Website inspected:**  
-<!-- Enter full URL -->
+https://www.scotiabank.com
 
 **Issuer (Certificate Authority):**  
-<!-- Example: DigiCert, Let's Encrypt, GlobalSign -->
+DigiCert Inc
 
 **Valid from:**  
-<!-- Start date -->
+Thursday, January 29, 2026
 
 **Valid until:**  
-<!-- Expiration date -->
+Friday, January 29, 2027
 
 **Signature algorithm:**  
-<!-- Example: sha256WithRSAEncryption -->
+SHA-256 With RSA Encryption
 
 ---
 
@@ -35,9 +35,9 @@ assets/screenshots/week-01/certificate-inspection.png
 
 List at least 2–3 SAN entries:
 
-- 
-- 
-- 
+- scotiaitrade.com
+- www.team.scotiabank.com
+- www.scotiawealthmanagement.com
 
 ---
 
@@ -46,13 +46,13 @@ List at least 2–3 SAN entries:
 Document three observations about the certificate.
 
 ### Observation 1
-<!-- What did you notice? -->
+The certificate was issued by DigiCert, which is a trusted public Certificate Authority used by many secure websites.
 
 ### Observation 2
-<!-- What did you notice? -->
+The certificate includes several Subject Alternative Names (SAN), allowing the same certificate to secure multiple Scotiabank-related domains.
 
 ### Observation 3
-<!-- What did you notice? -->
+The certificate was issued by DigiCert, a trusted public Certificate Authority, which allows browsers to verify the authenticity of the website.
 
 ---
 
@@ -60,4 +60,6 @@ Document three observations about the certificate.
 
 Based on your inspection, explain how this certificate contributes to secure HTTPS communication.
 
-(2–3 sentences)
+Reflection
+
+This certificate helps secure HTTPS communication by verifying the identity of the Scotiabank website. It is issued by a trusted Certificate Authority, which allows browsers to trust the website. The certificate also enables encryption so that data exchanged between the user and the website remains private and protected from interception.
