@@ -16,20 +16,20 @@ Embed the screenshot below:
 ## Website Information
 
 **Website inspected:**  
-<!-- Enter full URL -->
+http://www.scotiabank.com
 
 ---
 
 ## Certificate Chain Breakdown
 
 **Leaf (Server) Certificate**  
-<!-- Enter Common Name or Subject -->
+http://www.scotiabank.com
 
 **Intermediate Certificate Authority**
-<!-- Enter Intermediate CA name -->
+DigiCert Global G2 TLS RSA SHA256 2020 CA1
 
 **Root Certificate Authority (Trust Anchor)**
-<!-- Enter Root CA name -->
+DigiCert Global Root G2
 
 ---
 
@@ -37,9 +37,10 @@ Embed the screenshot below:
 
 Is the Root CA marked as trusted by your system?
 
-<!-- Yes / No -->
+Yes
 
 If yes, explain where that trust comes from (OS/browser root store).
+The trust comes from the operating system and browser root certificate store, which contains trusted certificate authorities.
 
 If no, explain what warning or behavior occurred.
 
@@ -50,13 +51,13 @@ If no, explain what warning or behavior occurred.
 Document three observations about the certificate.
 
 ### Observation 1
-<!-- What did you notice about the chain structure? -->
+The certificate chain shows how the website certificate links to a trusted root certificate.
 
 ### Observation 2
-<!-- What did you notice about the Root CA? -->
+An intermediate certificate authority is used instead of issuing certificates directly from the root CA.
 
 ### Observation 3
-<!-- What did you notice about how the browser determines trust? -->
+The browser automatically validates the certificate chain before establishing a secure HTTPS connection, and nd no security warning appears because the certificate is trusted.
 
 ---
 
@@ -68,3 +69,5 @@ In 3–5 sentences, explain:
 - What would happen if the Root CA were not trusted
 
 Use your own words.
+
+The root certificate is called a trust anchor because it is the starting point of trust in the certificate validation process. When a browser validates a website certificate, it checks the certificate chain from the server certificate to the intermediate certificate and finally to the trusted root certificate. If the root certificate is trusted by the system, the connection is considered secure. If the root certificate were not trusted, the browser would show a security warning.
