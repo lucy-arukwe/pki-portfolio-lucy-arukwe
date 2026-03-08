@@ -73,4 +73,4 @@ Why must the private key remain secret in a PKI system?
 
 Focus on how identity is tied to possession of the private key.
 
-The private key must be kept secret since it verifies the identity of the key owner. Anyone with the private key can generate valid signatures and decrypt protected data. If the private key is exposed, anyone can pretend to be the owner. This would break the PKI system trust model.
+In a PKI system, the private key must remain secret because it represents the identity of the key owner. Possession of the private key allows a user to decrypt encrypted data and create valid digital signatures. If the private key is compromised, an attacker could impersonate the legitimate entity and undermine trust in secure communications. Protecting the private key is therefore essential to maintaining the integrity of the PKI trust model.
