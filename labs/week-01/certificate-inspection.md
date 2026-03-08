@@ -35,7 +35,7 @@ SHA-256 With RSA Encryption
 
 List at least 2–3 SAN entries:
 
-- scotiaitrade.com
+- www.scotiaitrade.com
 - www.team.scotiabank.com
 - www.scotiawealthmanagement.com
 
