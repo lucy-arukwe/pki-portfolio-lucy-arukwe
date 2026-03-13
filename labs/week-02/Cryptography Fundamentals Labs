@@ -1,0 +1,63 @@
+Week 2 — Cryptography Fundamentals Labs
+Focus: Confidentiality, Integrity, and Authenticity
+This week moves from theory to application. You will work directly with the cryptographic primitives that power PKI and secure communications.
+
+By completing these labs, you will demonstrate practical understanding of:
+
+Encryption → Confidentiality
+Hashing → Integrity
+Digital Signatures → Integrity + Authenticity
+Lab Overview
+Lab	Topic	Security Property
+Lab 01	Symmetric Encryption	Confidentiality
+Lab 02	Hashing & Integrity	Integrity
+Lab 03	Digital Signatures	Integrity + Authenticity
+Lab Files
+Complete each lab in order:
+
+Lab 01 — Encrypt a File Symmetrically
+Lab 02 — Create a Hash of a File
+Lab 03 — Digitally Sign and Verify a File
+Submission Instructions
+1. Use the Week 2 submissions folder
+Place all generated artifacts inside: 02-week-02-cryptography-fundamentals/submissions/
+
+Create the following structure if it does not already exist: submissions/ encrypted/ hashes/ signatures/
+
+2. Commit Required Artifacts
+You must commit:
+
+Encrypted file(s)
+Decrypted output (if applicable)
+Hash output files
+Signature file(s)
+Public key (if applicable)
+Short explanations in this Week 2 README
+3. Artifact Placement Rules
+Use the submissions/ folder for generated cryptographic artifacts.
+Use the assets/ folder only for screenshots or documentation images.
+Do not submit screenshots unless explicitly requested.
+4. Security Requirement
+Do NOT commit private keys.
+
+Private keys should never be stored in version control.
+
+Completion Criteria
+You are considered complete when:
+
+All required artifacts are present
+Verification commands succeed
+Signature verification fails after tampering
+You can clearly explain:
+What encryption protects
+Why a hash changes when data changes
+Why a digital signature fails after modification
+Why This Matters
+Everything in PKI relies on these primitives:
+
+Certificates are digitally signed
+TLS uses symmetric encryption
+Trust validation depends on hashing
+Week 3 builds directly on this foundation with an X.509 certificate deep dive.
+
+Master these fundamentals before moving forward.
