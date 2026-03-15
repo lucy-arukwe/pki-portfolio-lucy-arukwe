@@ -1,4 +1,5 @@
-## Part 3 - Observations
+## Observations (Symmetric Encryption)
+
 ### Why the encrypted file is unreadable
 
 After encrypting the plaintext file using AES-256-CBC, the output file (`plaintext.txt.enc`) contained unreadable characters. 
@@ -18,4 +19,3 @@ This means that the data is protected from unauthorized access because only some
 ### Why TLS uses symmetric encryption for data transfer
 TLS uses symmetric encryption for data transfer because it is significantly faster and more efficient than asymmetric encryption when handling large amounts of data. 
 Once a secure session is established, symmetric encryption allows communication to remain confidential while maintaining high performance.
-
