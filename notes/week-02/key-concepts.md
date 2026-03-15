@@ -23,7 +23,7 @@ Asymmetric cryptography was designed to solve the key distribution problem. Inst
 
 This was explained this using a passport system analogy. A passport proves your identity and allows you to enter secure locations. Similarly, public key cryptography helps verify identity in digital systems.
 
-# Common asymmetric algorithms include RSA and ECC (Elliptic Curve Cryptography). RSA is widely used for digital signatures and key exchange, while ECC provides strong security with smaller key sizes and is often used in modern systems.
+Common asymmetric algorithms include RSA and ECC (Elliptic Curve Cryptography). RSA is widely used for digital signatures and key exchange, while ECC provides strong security with smaller key sizes and is often used in modern systems.
 
 ## TLS Handshake
 
