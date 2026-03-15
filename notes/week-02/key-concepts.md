@@ -3,7 +3,7 @@
 
 ## Digital Trust
 
-One of the main ideas this week was digital trust. The instructor explained this using the airport security model. Just like in an airport where passengers must show identification before entering secure areas, systems on the internet must verify identity before allowing secure communication. Identity verification helps ensure that users and systems are who they claim to be.
+One of the main ideas this week was digital trust. The lesson was explained using the airport security model. Just like in an airport where passengers must show identification before entering secure areas, systems on the internet must verify identity before allowing secure communication. Identity verification helps ensure that users and systems are who they claim to be.
 
 ## Encryption
 
@@ -21,7 +21,7 @@ The main weakness of symmetric encryption is the key distribution problem. Both 
 
 Asymmetric cryptography was designed to solve the key distribution problem. Instead of one key, it uses two keys: a public key and a private key.
 
-This was explained this using a passport system analogy. A passport proves your identity and allows you to enter secure locations. Similarly, public key cryptography helps verify identity in digital systems.
+This was explained using a passport system analogy. A passport proves your identity and allows you to enter secure locations. Similarly, public key cryptography helps verify identity in digital systems.
 
 Common asymmetric algorithms include RSA and ECC (Elliptic Curve Cryptography). RSA is widely used for digital signatures and key exchange, while ECC provides strong security with smaller key sizes and is often used in modern systems.
 
@@ -48,9 +48,9 @@ Public Key Infrastructure can fail if certain problems occur. For example, if a 
 
 ## CIA Triad
 
-The CIA triad represents three core security goals: confidentiality, integrity, and authenticity.
+The CIA triad represents three core security goals: confidentiality, integrity, and availabilty.
 
-Confidentiality protects data from unauthorized access. Integrity ensures that data has not been changed. Authenticity confirms the identity of the sender or system.
+Confidentiality protects data from unauthorized access. Integrity ensures that data has not been altered or tampered with. Availability ensures that systems and data remain accessible to authorized users when they are needed.
 
 ## Hashing
 
@@ -64,7 +64,9 @@ This proves two things: that the data came from the correct sender and that the 
 
 Hybrid Cryptography
 
-Most real-world systems use hybrid cryptography, which combines symmetric and asymmetric encryption. Asymmetric cryptography is used for authentication and key exchange, while symmetric encryption is used for fast data transmission. By combining both approaches, hybrid cryptography supports the goals of the CIA triad. Symmetric encryption helps protect confidentiality, hashing helps ensure integrity, and digital signatures help confirm authenticity. Together, these mechanisms create trusted and secure communication systems such as HTTPS and TLS.
+Most real-world systems use hybrid cryptography, which combines symmetric and asymmetric encryption. Asymmetric cryptography is used for authentication and secure key exchange, while symmetric encryption is used for efficient and fast data transmission.
+
+By combining both approaches, hybrid cryptography helps support the goals of the CIA triad. Symmetric encryption protects confidentiality, hashing helps maintain integrity, and strong system design helps ensure availability of secure services. Together, these mechanisms enable trusted and secure communication systems such as HTTPS and TLS.
 
 ## Lab Observations
 
