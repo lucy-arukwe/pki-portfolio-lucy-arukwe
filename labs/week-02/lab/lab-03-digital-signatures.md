@@ -72,6 +72,29 @@ Now verify again using the same command.
 
 The verification should fail.
 
+
+---
+
+## Verification Evidence (Screenshots)
+
+### Successful Signature Verification
+
+The screenshot below shows the successful verification of the digital signature before the file was modified.
+
+![Successful digital signature verification](../../assets/screenshots/week-02/digital-signature-verified-ok.png)
+
+### File After Tampering
+
+The file `artifact.txt` was modified by adding the word `tampered`.
+
+![Artifact file after tampering](../../assets/screenshots/week-02/digital-signature-tampered-file.png)
+
+### Verification Failure After Modification
+
+After modifying the signed file, verification fails because the file content no longer matches the original signature.
+
+![Digital signature verification failure](../../assets/screenshots/week-02/digital-signature-verification-failure.png)
+
 ## Part 3 — Observations
 Document the following in your Week 2 notes:
 - Why verification succeeds before tampering
