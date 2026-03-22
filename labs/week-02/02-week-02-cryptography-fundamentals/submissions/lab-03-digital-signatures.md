@@ -39,29 +39,18 @@ error:02000068:rsa routines:ossl_rsa_verify:bad signature`
 The signature that was valid before tampering became completely invalid after a single change to the file.
 
 
-If you include screenshots, store them in `assets/screenshots/` at the root of your repo and reference them here.
+---
+Key generation (RSA 2048-bit):
 
-**How to embed an image:**
+![Key generation](../../../../assets/screenshots/week-02/week02-lab03-key-generation.png)
 
-**Option A — Terminal / Local Editor**
+Signature verification before modification:
 
-Save your screenshot to `assets/screenshots/` in your repo, then reference it using a relative path from your submission file:
+![Verification success](../../../../assets/screenshots/week-02/week02-lab03-signature-verified.png)
 
-```markdown
-![Description of your screenshot](../../../assets/screenshots/your-filename.png)
-```
+Signature verification after file modification:
 
-> The `../../../` moves up three levels: `submissions/` → `week-03/` → `labs/` → repo root, then into `assets/screenshots/`.
-
-**Option B — GitHub Web (Easiest)**
-
-Open your `.md` file on GitHub, click the pencil icon to edit, then **drag and drop your image directly into the text editor**. GitHub will upload it automatically and insert the correct link for you.
-
-Example of what an embedded image looks like:
-
-```markdown
-![Certificate output showing SAN field](../../../assets/screenshots/san-field.png)
-```
+![Verification failed](../../../../assets/screenshots/week-02/week02-lab03-signature-verification-failed.png)
 
 ---
 
