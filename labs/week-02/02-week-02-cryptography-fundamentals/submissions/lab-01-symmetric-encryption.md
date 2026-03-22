@@ -24,6 +24,11 @@ This lab explored symmetric encryption using AES-256-CBC to understand the secur
 
 ## Results
 
+Plaintext file created and verified:
+
+![Plaintext file created](../../../assets/screenshots/week02-lab01-plaintext-created.png)
+
+
 Examples may include:
 
 - Command outputs
