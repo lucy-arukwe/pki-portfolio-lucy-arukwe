@@ -65,5 +65,3 @@ Certificate chains work like a chain of trust. The website is verified by an int
 ---
 
 *CVI PKI Career Pathway — Foundations Phase*
-
-*CVI PKI Career Pathway — Foundations Phase*
