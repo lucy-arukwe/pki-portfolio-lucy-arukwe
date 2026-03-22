@@ -2,7 +2,7 @@
 # Week 03 Reflection
 
 
-## 1. What did you learn this week?
+## 1. What I learned this week?
 
 This week focused on X.509 certificates and how they establish identity and trust in Public Key Infrastructure systems. Through five hands-on labs, practical experience was gained in retrieving live certificates from real websites using OpenSSL and analyzing their structure.
 
