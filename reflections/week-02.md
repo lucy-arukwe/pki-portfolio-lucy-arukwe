@@ -2,7 +2,7 @@
 
 ## Week 02 Reflection: Cryptography Fundamentals
 
-## 1. What did you learn this week?
+## 1. What I learned this week?
 
 This week helped me understand the difference between confidentiality, integrity, and authenticity, and how they work together in security systems.
 
@@ -36,7 +36,7 @@ Code signing is another place where this is used. Developers sign their software
 
 Organizations also use PKI systems internally to manage secure communication, authentication, and access control.
 
-## 4. How would you explain this topic to a non-technical audience?
+## 4. How would I explain this topic to a non-technical audience?
 
 If I had to explain this to someone without a technical background, I would describe it like this.
 
