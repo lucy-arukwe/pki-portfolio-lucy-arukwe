@@ -2,14 +2,7 @@
 
 ## Screenshot Evidence
 
-1. Capture a screenshot of the certificate details in your browser.
-2. Save it as:
-
-assets/screenshots/week-01/certificate-inspection.png
-
-3. Embed the screenshot below:
-
-![Certificate Inspection](../../assets/screenshots/week-01/certificate-inspection.png)
+![Certificate Inspection](../../../../assets/screenshots/week-01/certificate-inspection.png)
 
 
 ## Website Information
