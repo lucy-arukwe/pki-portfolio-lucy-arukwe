@@ -26,7 +26,20 @@ This lab explored symmetric encryption using AES-256-CBC to understand the secur
 
 Plaintext file created and verified:
 
-![Plaintext file created](../../../assets/screenshots/week-02/week02-lab01-plaintext-created.png)
+![Plaintext file created](../../../../assets/screenshots/week-02/week02-lab01-plaintext-created.png)
+
+Encryption process:
+
+![Encryption](../../../../assets/screenshots/week-02/week02-lab01-encryption-command.png)
+
+Decryption process:
+
+![Decryption](../../../../assets/screenshots/week-02/week02-lab01-decryption-command.png)
+
+Verification using diff:
+
+![Diff](../../../../assets/screenshots/week-02/week02-lab01-diff-verification.png)
+
 
 Examples may include:
 
