@@ -7,11 +7,8 @@
 ---
 
 ## Key Properties
-- What makes the public key safe to share?
-The public key can be shared because it is used to encrypt data or verify digital signatures. It cannot reveal the private key.
-
-- What makes the private key sensitive?
-The private key is sensitive because it is used to decrypt data and create digital signatures.
+- The public key can be shared because it is used to encrypt data or verify digital signatures. It cannot reveal the private key.
+- The private key is sensitive because it is used to decrypt data and create digital signatures.
 
 ---
 
