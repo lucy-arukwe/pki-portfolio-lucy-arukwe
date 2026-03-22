@@ -40,19 +40,24 @@ The signature that was valid before tampering became completely invalid after a 
 
 
 ---
+
 ![Artifact file created](../../../../assets/screenshots/week-02/week02-lab03-artifact-created.png)
+
 
 Key generation (RSA 2048-bit):
 
 ![Key generation](../../../../assets/screenshots/week-02/week02-lab03-key-generation.png)
 
+
 Signature verification before modification:
 
 ![Verification success](../../../../assets/screenshots/week-02/week02-lab03-signature-verified.png)
 
+
 Signature verification after file modification:
 
 ![Verification failed](../../../../assets/screenshots/week-02/week02-lab03-signature-verification-failed.png)
+
 
 ---
 
