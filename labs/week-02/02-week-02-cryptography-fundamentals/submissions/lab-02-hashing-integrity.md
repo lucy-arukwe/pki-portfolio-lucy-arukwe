@@ -37,29 +37,20 @@ SHA2-256(message.txt)= be2d7fb9708376211adb5b6034965a4b94c78ff42b14e7cbaf63fa02a
 The two hashes share no visible similarity, even though the file content is almost identical.
 This confirmed that even a small change in input results in a completely different hash value.  
 
+---
 Evidence stored in `assets/screenshots/` 
 
-**How to embed an image:**
+Hash generation using SHA-256:
 
-**Option A — Terminal / Local Editor**
+![Hash generation](../../../../assets/screenshots/week-02/week02-lab02-hash-generation.png)
 
-Save your screenshot to `assets/screenshots/` in your repo, then reference it using a relative path from your submission file:
+File modification (tampering step):
 
-```markdown
-![Description of your screenshot](../../../assets/screenshots/your-filename.png)
-```
+![File tampering](../../../../assets/screenshots/week-02/week02-lab02-file-tampering.png)
 
-> The `../../../` moves up three levels: `submissions/` → `week-03/` → `labs/` → repo root, then into `assets/screenshots/`.
+Hash comparison before and after modification:
 
-**Option B — GitHub Web (Easiest)**
-
-Open your `.md` file on GitHub, click the pencil icon to edit, then **drag and drop your image directly into the text editor**. GitHub will upload it automatically and insert the correct link for you.
-
-Example of what an embedded image looks like:
-
-```markdown
-![Certificate output showing SAN field](../../../assets/screenshots/san-field.png)
-```
+![Hash comparison](../../../../assets/screenshots/week-02/week02-lab02-hash-comparison.png)
 
 ---
 
