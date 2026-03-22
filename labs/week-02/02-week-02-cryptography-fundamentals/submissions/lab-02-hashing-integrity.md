@@ -6,7 +6,7 @@ This lab focused on understanding how cryptographic hashing works and why it is 
 ---
 
 ## Environment
-Document the environment used to complete the lab.
+Environment used to complete the lab.
 
 - Operating System: Windows 11 
 - Terminal Used: Git Bash (MINGW64)
@@ -80,7 +80,7 @@ A certificate is signed based on a hash of its contents, and any change to the c
 - `labs/week-02/02-week-02-cryptography-fundamentals/submissions/hashes/message.txt` — original test message
 - `labs/week-02/02-week-02-cryptography-fundamentals/submissions/hashes/message.sha256.txt` — SHA-256 hash of the original file
 - `labs/week-02/02-week-02-cryptography-fundamentals/submissions/hashes/message_tampered.sha256.txt` — SHA-256 hash after tampering
-- `labs/week-02/02-week-02-cryptography-fundamentals/submissions/hashes/lab-02-hashing-integrity.md` — this write-up
+- `labs/week-02/02-week-02-cryptography-fundamentals/submissions/hashes/lab-02-hashing-integrity.md`
 
 
 ---
