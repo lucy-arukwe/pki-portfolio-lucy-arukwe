@@ -1,41 +1,43 @@
-# Lab — [Lab Title]
+# Lab — Digital Signatures (Integrity + Authenticity)
 
 ## Overview
-Briefly describe the purpose of this lab in your own words.
-What PKI concept or system behavior were you investigating?
+This lab focused on understanding how digital signatures work and the security properties they provide. An RSA key pair was generated, a file was signed using the private key, and the signature was verified using the public key. The file was then modified to observe how verification fails when content changes, showing how digital signatures detect tampering and confirm the identity of the signer. This is the same mechanism used when a Certificate Authority signs an X.509 certificate.
 
 ---
 
 ## Environment
-Document the environment used to complete the lab.
 
-- Operating System:
-- Terminal Used:
-- OpenSSL Version (if applicable):
+- Operating System: Windows 11
+- Terminal Used: Git Bash (MINGW64)
+- OpenSSL Version: OpenSSL 3.5.5 27 Jan 2026 
 
 ---
 
 ## Steps Performed
-Summarize the key steps you performed to complete the lab.
 
-Do **not copy the lab instructions**.
-Describe what you actually did.
-
-1.
-2.
-3.
+1. Created the `submissions/signatures/` directory inside the Week 2 lab folder.
+2. Created a plaintext file containing "Week 2 Digital Signature Lab - CVI" as the artifact to be signed.
+3. Generated a 2048-bit RSA private key using OpenSSL.
+4. Extracted the corresponding public key from the private key and saved it as a separate file.
+5. Signed the artifact file using the private key with SHA-256 hashing, producing a `.sig` signature file.
+6. Verified the signature against the artifact using the public key and received `Verified OK`.
+7.  Modified the original file to simulate tampering and attempted verification again.  
+8. Ran verification again on the modified file and received `Verification failure`.
+9. Deleted the private key to ensure it was not committed to version control.
 
 ---
 
 ## Results
-Include the important outputs or findings from the lab.
 
-Examples may include:
+Before tampering:
+`Verified OK`
 
-- Command outputs
-- Certificate fields or values
-- Verification results
-- Screenshots (if applicable)
+After appending "tampered" to the file:
+`Verification failure
+error:02000068:rsa routines:ossl_rsa_verify:bad signature`
+
+The signature that was valid before tampering became completely invalid after a single change to the file.
+
 
 If you include screenshots, store them in `assets/screenshots/` at the root of your repo and reference them here.
 
@@ -64,52 +66,38 @@ Example of what an embedded image looks like:
 ---
 
 ## Key Findings
-Document the most important observations from the lab.
 
-Examples:
-
-- What you discovered about the certificate, key, or protocol
-- How a specific field or extension affected the outcome
-- What a validation result indicated
-- Any unexpected behavior or results
-
--
--
--
+- Signature verification succeeded when the file was unchanged, confirming both integrity and authenticity.
+- A small modification caused verification to fail immediately, showing that signatures are tied to the exact content.
+- The private key is used for signing and must remain secret, while the public key is used for verification and can be shared.
+- Digital signatures combine hashing and asymmetric cryptography, and both are required for the process to work.
 
 ---
 
 ## Explanation
-Explain **why the results matter**.
 
-Examples:
+Digital signatures provide integrity and authenticity. Integrity ensures the content has not been altered, while authenticity confirms the content was created by the holder of the private key.
 
-- Why a specific field or extension is required
-- Why a validation succeeded or failed
-- What the result means in a real-world PKI context
-- How this connects to the week's learning outcomes
+The process works by hashing the file and encrypting that hash using the private key. During verification, the file is hashed again and compared to the decrypted signature using the public key.
+
+In PKI, Certificate Authorities use this same process to sign certificates. Systems verify those signatures using the CA’s public key, ensuring the certificate is legitimate and unchanged.
+
+If a private key is exposed or committed to version control, it can be used to forge signatures and impersonate the signer. This is why the private key was deleted after completing the lab.
 
 ---
 
 ## Challenges / Troubleshooting
-Document any issues encountered during the lab and how you resolved them.
 
-Examples:
-
-- Command errors
-- Missing files or dependencies
-- Verification failures and how you diagnosed them
+No major issues were encountered. Care was taken to ensure correct file paths and proper command usage. Verification failure after tampering confirmed expected behavior.
 
 ---
 
 ## Artifacts
-List the files generated or submitted during this lab.
-
-Examples:
-
-- Any `.pem`, `.crt`, or `.key` files produced
-- Your completed lab write-up `.md` file
-- Screenshots stored in `assets/screenshots/`
+- `labs/week-02/02-week-02-cryptography-fundamentals/submissions/signatures/artifact.txt` — the signed file (tampered version after modification)
+- `labs/week-02/02-week-02-cryptography-fundamentals/submissions/signatures/artifact.sig` — the digital signature
+- `labs/week-02/02-week-02-cryptography-fundamentals/submissions/signatures/public_key.pem` — the RSA public key used for verification
+- `labs/week-02/02-week-02-cryptography-fundamentals/submissions/signatures/lab-03-digital-signatures.md` — this write-up
+- Screenshots to this lab are stored in `assets/screenshots/`
 
 ---
 
