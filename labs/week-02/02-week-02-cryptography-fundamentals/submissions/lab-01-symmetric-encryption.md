@@ -36,6 +36,7 @@ Encryption process:
 Encrypted file output (ciphertext):
 
 ![Ciphertext](../../../../assets/screenshots/week-02/week02-lab01-ciphertext-output.png)
+
 Decryption process:
 
 ![Decryption](../../../../assets/screenshots/week-02/week02-lab01-decryption-command.png)
