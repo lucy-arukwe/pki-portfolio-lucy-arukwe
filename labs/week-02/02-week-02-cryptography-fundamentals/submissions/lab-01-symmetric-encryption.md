@@ -22,6 +22,7 @@ This lab explored symmetric encryption using AES-256-CBC to understand the secur
 6. Used the `diff` command to verify that the decrypted file matched the original plaintext.  
 ---
 
+
 ## Results
 
 Plaintext file created and verified:
@@ -32,6 +33,9 @@ Encryption process:
 
 ![Encryption](../../../../assets/screenshots/week-02/week02-lab01-encryption-command.png)
 
+Encrypted file output (ciphertext):
+
+![Ciphertext](../../../../assets/screenshots/week-02/week02-lab01-ciphertext-output.png)
 Decryption process:
 
 ![Decryption](../../../../assets/screenshots/week-02/week02-lab01-decryption-command.png)
@@ -40,37 +44,6 @@ Verification using diff:
 
 ![Diff](../../../../assets/screenshots/week-02/week02-lab01-diff-verification.png)
 
-
-Examples may include:
-
-- Command outputs
-- Certificate fields or values
-- Verification results
-- Screenshots (if applicable)
-
-If you include screenshots, store them in `assets/screenshots/` at the root of your repo and reference them here.
-
-**How to embed an image:**
-
-**Option A — Terminal / Local Editor**
-
-Save your screenshot to `assets/screenshots/` in your repo, then reference it using a relative path from your submission file:
-
-```markdown
-![Description of your screenshot](../../../assets/screenshots/your-filename.png)
-```
-
-> The `../../../` moves up three levels: `submissions/` → `week-03/` → `labs/` → repo root, then into `assets/screenshots/`.
-
-**Option B — GitHub Web (Easiest)**
-
-Open your `.md` file on GitHub, click the pencil icon to edit, then **drag and drop your image directly into the text editor**. GitHub will upload it automatically and insert the correct link for you.
-
-Example of what an embedded image looks like:
-
-```markdown
-![Certificate output showing SAN field](../../../assets/screenshots/san-field.png)
-```
 
 ---
 
