@@ -19,7 +19,8 @@ This lab explored symmetric encryption using AES-256-CBC to understand the secur
 3. Encrypted the plaintext file using AES-256-CBC with salt and PBKDF2 key derivation, providing a password when prompted.  
 4. Observed the encrypted output, which appeared as unreadable binary ciphertext.  
 5. Decrypted the encrypted file using the same password, producing a decrypted output file.  
-6. Used the `diff` command to verify that the decrypted file matched the original plaintext.  
+6. Used the `diff` command to verify that the decrypted file matched the original plaintext.
+   
 ---
 
 
@@ -57,7 +58,6 @@ The successful `diff` result confirmed that encryption and decryption are invers
 ---
 
 ## Explanation
-Explain **why the results matter**.
 
 Symmetric encryption ensures confidentiality by allowing only users with the correct key or password to access the data. The encryption process converts plaintext into ciphertext, making it unreadable to unauthorized users. AES-256 is considered computationally infeasible to brute-force with current technology, making it the standard for protecting data at rest and in transit. 
 If the wrong password were used during decryption, OpenSSL would produce a "bad decrypt" error because the derived key would be incorrect, resulting in garbage output or a failed operation.
@@ -75,7 +75,7 @@ One minor challenge was ensuring the correct file paths were used during encrypt
 - plaintext.txt.enc  — AES-256-CBC encrypted ciphertext
 - plaintext.decrypted.txt — decrypted output file
 
-Screenshots stored in ``assets/screenshots/``
+Screenshots are stored in ``assets/screenshots/``
 
 ---
 
