@@ -1,4 +1,4 @@
-# Week 2 Lesson Notes — Cryptography Fundamentals (Just Enough)
+# Week 2 Lesson Notes — Cryptography Fundamentals
 
 ---
 
