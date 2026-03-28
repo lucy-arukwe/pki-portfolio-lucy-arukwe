@@ -1,4 +1,4 @@
-# Week X — [Certificate Formats & Trust Stores]
+# Week 4 — Certificate Formats & Trust Stores
 
 ## Focus
 This week explores how digital certificates are structured, how they are stored across different systems, and how trust is actually established. It connects to the PKI mental model by showing that identity is defined in the certificate, trust is controlled by the trust store, and verification determines whether that trust is valid.
