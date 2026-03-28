@@ -80,6 +80,7 @@ A large number of root CAs are trusted by default on a standard system. This mea
 
 ## Challenges / Troubleshooting
 No major technical issues were encountered during this lab. All commands executed successfully, and the trust validation completed as expected. Additional attention was required to interpret certificate fields and understand how the certificate chain relates to the system trust store.
+
 ---
 
 ## Artifacts
