@@ -1,4 +1,4 @@
-# Week X — [Topic Title]
+# Week X — [Certificate Formats & Trust Stores]
 
 ## Focus
 This week explores how digital certificates are structured, how they are stored across different systems, and how trust is actually established. It connects to the PKI mental model by showing that identity is defined in the certificate, trust is controlled by the trust store, and verification determines whether that trust is valid.
@@ -22,7 +22,6 @@ By the end of this week, the following capabilities were developed:
 - Understand how certificate chains are built and validated against trusted roots
 - Install and remove root CAs to observe how trust is established and revoked
 - Distinguish between system-level trust and manual trust during certificate verification
-
 
 ---
 
