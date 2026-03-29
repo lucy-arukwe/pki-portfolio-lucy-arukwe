@@ -41,13 +41,13 @@ The OpenSSL command `openssl s_client -connect google.com:443 -verify_return_err
 This confirms that the certificate presented by Google was successfully validated against the system’s trusted root store. The connection negotiated TLS 1.3 using the TLS_AES_256_GCM_SHA384 cipher suite, and the certificate was issued to `*.google.com` by Google Trust Services (CN=WR2).
 
 
-Certificate Manager — Trusted Root CAs:
+## Certificate Manager — Trusted Root CAs:
 ![Certificate Manager](../../../../assets/screenshots/week-04/01_certmgr_root_cas.png)
 
-GlobalSign Root CA Details:
+## GlobalSign Root CA Details:
 ![Root CA Details](../../../../assets/screenshots/week-04/02_root_ca_details.png)
 
-certutil CN= Output:
+## certutil CN= Output:
 ![certutil Output](../../../../assets/screenshots/week-04/03_certutil_output.png)
 
 
