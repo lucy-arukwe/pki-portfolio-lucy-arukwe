@@ -51,10 +51,10 @@ Root CA Installed via PowerShell:
 ![Root CA Installed PowerShell](../../../../assets/screenshots/week-04/02_ca_installed_powershell.png)
 
 Root CA Visible in certmgr.msc:
-![Root CA in certmgr](../../../../assets/screenshots/week-04/your03_ca_installed_certmgr.png-screenshot.png)
+![Root CA in certmgr](../../../../assets/screenshots/week-04/your03_ca_installed_certmgr.png)
 
 Trust Chain Validated:
-![Trust Chain Valid](../../../../assets/screenshots/week-04/04_trust_chain_valid.png)
+![Trust Chain Valid](../../../../assets/screenshots/week-04/05_trust_chain_valid.png)
 
 Root CA Removed via PowerShell:
 ![Root CA Removed](../../../../assets/screenshots/week-04/06_ca_removed_verify.png)
