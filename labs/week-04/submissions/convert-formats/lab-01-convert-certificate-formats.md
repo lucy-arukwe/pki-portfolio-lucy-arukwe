@@ -34,22 +34,22 @@ PFX verification:
 The `openssl pkcs12 -info` command confirmed that the PFX bundle was valid. After entering the password, the output displayed certificate information and verified the integrity of the bundled data.
 
 PEM Inspection:
-![PEM Inspection](../../assets/screenshots/week-04/01_pem_inspection.png)
+![PEM Inspection](../../../../assets/screenshots/week-04/01_pem_inspection.png)
 
 DER Conversion:
-![DER Conversion](../../assets/screenshots/week-04/02_der_conversion.png)
+![DER Conversion](../../../../assets/screenshots/week-04/02_der_conversion.png)
 
 DER Verification:
-![DER Verification](../../assets/screenshots/week-04/03_der_verification.png)
+![DER Verification](../../../../assets/screenshots/week-04/03_der_verification.png)
 
 Diff Output:
-![Diff Output](../../assets/screenshots/week-04/04_diff_output.png)
+![Diff Output](../../../../assets/screenshots/week-04/04_diff_output.png)
 
 PFX Creation:
-![PFX Creation](../../assets/screenshots/week-04/05_pfx_creation.png)
+![PFX Creation](../../../../assets/screenshots/week-04/05_pfx_creation.png)
 
 PFX Verification:
-![PFX Verification](../../assets/screenshots/week-04/06_pfx_verification.png)
+![PFX Verification](../../../../assets/screenshots/week-04/06_pfx_verification.png)
 
 ---
 
