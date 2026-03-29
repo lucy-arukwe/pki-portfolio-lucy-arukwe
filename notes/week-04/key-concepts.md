@@ -1,4 +1,4 @@
-# Week 04 Lesson Notes — [Certificate Authorities & Trust Models]
+# Week 04 Lesson Notes — Certificate Authorities & Trust Models
 
 ## 1. Core Concept
 
