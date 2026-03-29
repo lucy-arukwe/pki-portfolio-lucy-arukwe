@@ -45,22 +45,19 @@ Trust Chain Confirmation:
 Successful verification (when trusted) confirmed that the certificate chain was correctly built from the signed certificate back to the root CA.
 
 Root CA Generated:
-![Root CA Generated](../../assets/screenshots/week-04/01_root_ca_generated.png)
+![Root CA Generated](../../../../assets/screenshots/week-04/01_root_ca_generated.png)
 
 Root CA Installed via PowerShell:
-![Root CA Installed PowerShell](../../assets/screenshots/week-04/02_ca_installed_powershell.png)
+![Root CA Installed PowerShell](../../../../assets/screenshots/week-04/02_ca_installed_powershell.png)
 
 Root CA Visible in certmgr.msc:
-![Root CA in certmgr](../../assets/screenshots/week-04/your03_ca_installed_certmgr.png-screenshot.png)
+![Root CA in certmgr](../../../../assets/screenshots/week-04/your03_ca_installed_certmgr.png-screenshot.png)
 
 Trust Chain Validated:
-![Trust Chain Valid](../../assets/screenshots/week-04/04_trust_chain_valid.png)
+![Trust Chain Valid](../../../../assets/screenshots/week-04/04_trust_chain_valid.png)
 
 Root CA Removed via PowerShell:
-![Root CA Removed](../../assets/screenshots/week-04/04_trust_chain_valid.png)
-
-Verify Output After Removal
-![Verify After Removal](../../assets/screenshots/week-04/06_verification_failed.png)
+![Root CA Removed](../../../../assets/screenshots/week-04/06_ca_removed_verify.png)
 
 ---
 
@@ -112,7 +109,6 @@ This time, the command failed, confirming that the root CA had been successfully
 
 ---
 
-## Artifacts
 ## Artifacts
 
 | File                | Description                           |              
