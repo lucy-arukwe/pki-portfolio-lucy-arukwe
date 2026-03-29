@@ -42,16 +42,14 @@ This confirms that the certificate presented by Google was successfully validate
 
 
 Certificate Manager — Trusted Root CAs:
-![Certificate Manager](../../assets/screenshots/week-04/01_certmgr_root_cas.png)
+![Certificate Manager](../../../../assets/screenshots/week-04/01_certmgr_root_cas.png)
 
 GlobalSign Root CA Details:
-![Root CA Details](../../assets/screenshots/week-04/02_root_ca_details.png)
+![Root CA Details](../../../../assets/screenshots/week-04/02_root_ca_details.png)
 
 certutil CN= Output:
-![certutil Output](../../assets/screenshots/week-04/03_certutil_output.png)
+![certutil Output](../../../../assets/screenshots/week-04/03_certutil_output.png)
 
-Trust Validation — Verify return code: 0 (ok):
-![Trust Validation](../../assets/screenshots/week-04/Trust Validation)
 
 ---
 
