@@ -82,7 +82,5 @@ No major technical issues were encountered during this lab. All commands execute
 ---
 
 ## Artifacts
-List the files generated during this lab.
 
-Artifacts
 - screenshots are stored in assets/screenshots/week-04/
