@@ -44,22 +44,22 @@ Verification failed because the system no longer trusted the root CA after it wa
 Trust Chain Confirmation:
 Successful verification (when trusted) confirmed that the certificate chain was correctly built from the signed certificate back to the root CA.
 
-Root CA Generated:
+## Root CA Generated:
 ![Root CA Generated](../../../../assets/screenshots/week-04/01_root_ca_generated.png)
 
-Root CA Installed via PowerShell:
+## Root CA Installed via PowerShell:
 ![Root CA Installed PowerShell](../../../../assets/screenshots/week-04/02_ca_installed_powershell.png)
 
-Root CA Visible in certmgr.msc:
+## Root CA Visible in certmgr.msc:
 ![Root CA in certmgr](../../../../assets/screenshots/week-04/03_ca_installed_certmgr.png)
 
-Signed Certifcated Created:
+## Signed Certifcated Created:
 ![Signed Certificate created](../../../../assets/screenshots/week-04/04_signed_cert_created.png)
 
-Trust Chain Validated:
+## Trust Chain Validated:
 ![Trust Chain Valid](../../../../assets/screenshots/week-04/05_trust_chain_valid.png)
 
-Root CA Removed via PowerShell:
+## Root CA Removed via PowerShell:
 ![Root CA Removed](../../../../assets/screenshots/week-04/06_ca_removed_verify.png)
 
 ---
@@ -116,7 +116,7 @@ This time, the command failed, confirming that the root CA had been successfully
 
 | File                | Description                           |              
 |---------------------|---------------------------------------|
-| `test-root-ca.crt`  | Self-signed test root CA certificate  |
+| `test-root-ca.crt`  |Self-signed test root CA certificate   |
 | `test-signed.crt`   |Certificate signed by the test root CA |
 
 
