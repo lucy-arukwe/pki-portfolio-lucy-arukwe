@@ -4,7 +4,7 @@
 
 ## 
 
-1. What did I learnt this week?
+1. What I learnt this week?
 This week focused on understanding how certificates actually work beyond just being files. A certificate is a structured trust statement that contains identity, a public key, and a signature from a Certificate Authority. The most important takeaway was that trust is not inside the certificate itself — it depends on whether the certificate chains up to a trusted root CA in the system.
 
 Different certificate formats such as PEM, DER, and PFX were also explored. These formats do not change the certificate data, only how it is encoded and stored. The labs reinforced this by converting between formats and confirming that the certificate remained identical.
