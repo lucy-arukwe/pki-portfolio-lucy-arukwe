@@ -1,3 +1,4 @@
 *.key
+*_key.pem
 bfg.jar
 git-filter-repo
