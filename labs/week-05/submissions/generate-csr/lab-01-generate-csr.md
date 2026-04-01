@@ -79,11 +79,13 @@ The validity period is set by the `-days 365` flag, meaning the certificate is v
 The certificate uses RSA (2048-bit), and the public key was derived directly from the private key used to generate the CSR.
 
 
-![CSR Inspection](../../../assets/screenshots/week-05/lab01-csr-inspection.png)
+![CSR Inspection](../../../../assets/screenshots/week-05/lab01-csr-inspection.png)
 
-![Signed Certificate Inspection](../../../assets/screenshots/week-05/lab01-cert-inspection.png)
 
-![Public Key Extraction and Comparison](../../../assets/screenshots/lab01-pubkey-diff.png)
+![Signed Certificate Inspection](../../../../assets/screenshots/week-05/lab01-cert-inspection.png)
+
+
+![Public Key Extraction and Comparison](../../../../assets/screenshots/lab01-pubkey-diff.png)
 
 
 ---
