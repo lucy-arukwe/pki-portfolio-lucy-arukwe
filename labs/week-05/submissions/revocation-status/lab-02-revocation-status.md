@@ -1,22 +1,25 @@
-# Lab 02 — Check Certificate Revocation Status with OCSP
+# Lab 02 — Check Certificate Revocation Status with OCSP 
 
 ## Overview
-Briefly describe what this lab was about in your own words.
-What PKI concept or system behavior were you investigating?
+This lab focused on understanding how certificate revocation is verified in real-world PKI systems. A live certificate was retrieved from a production website, its trust chain was examined, the OCSP responder URL was extracted from the certificate extensions, and the responder was queried to verify the certificate’s current revocation status.
+
+The core PKI concept being investigated was certificate revocation checking via OCSP (Online Certificate Status Protocol), specifically how systems verify that a certificate has not been revoked before trusting it, even if it has not yet expired. This reinforces the idea that validity alone does not guarantee trust.
+
+This work was carried out over a one week period, allowing for a deeper understanding of both the structure of certificates and how revocation mechanisms operate in practice.
+
+This hands-on experience demonstrated that certificate trust is dynamic: it depends not only on cryptographic signatures and validity dates, but also on whether the certificate authority has actively revoked the certificate due to compromise, misuse, or other security concerns. This highlights how PKI systems continuously evaluate trust rather than assuming it is permanent.
 
 ---
 
 ## Environment
-- Operating System:
-- Terminal Used:
-- OpenSSL Version (`openssl version`):
-- Target site used:
+- Operating System: Windows 11
+- Terminal Used: Git Bash (MINGW64)
+- OpenSSL Version: `OpenSSL 3.5.5 27 Jan 2026 (Library: OpenSSL 3.5.5 27 Jan 2026)`
+- Target site used: github.com
 
 ---
 
 ## Steps Performed
-Summarize the key steps you performed to complete the lab.
-Do not copy the lab instructions — describe what you actually did.
 
 1.
 2.
