@@ -85,7 +85,7 @@ The certificate uses RSA (2048-bit), and the public key was derived directly fro
 ![Signed Certificate Inspection](../../../../assets/screenshots/week-05/lab01-cert-inspection.png)
 
 
-![Public Key Extraction and Comparison](../../../../assets/screenshots/lab01-pubkey-diff.png)
+![Public Key Extraction and Comparison](../../../../assets/screenshots/week-05/lab01-pubkey-diff.png)
 
 
 ---
