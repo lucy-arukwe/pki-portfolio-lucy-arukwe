@@ -10,7 +10,7 @@ The core PKI concept being investigated was `the certificate request and issuanc
 ## Environment
 - Operating System: `Windows 11`
 - Terminal Used: `Git Bash (MINGW64)`
-- OpenSSL Version: `OpenSSL 3.5.5 27 Jan 2026 (Library: OpenSSL 3.5.5 27 Jan 2026)`
+- OpenSSL Version: `OpenSSL 3.5.5 27 Jan 2026`
 
 ---
 
