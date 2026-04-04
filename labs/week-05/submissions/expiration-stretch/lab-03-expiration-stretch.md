@@ -130,7 +130,7 @@ At enterprise scale, this is necessary to prevent unexpected outages and to mana
 
 ## Challenges / Troubleshooting
 
-Multi-line commands in Git Bash:
+1. Multi-line commands in Git Bash:
 
 While generating keys and certificates, multi-line OpenSSL commands using backslashes (`\`) were initially used to improve readability. However, in Git Bash on Windows, 
 this caused syntax errors and prevented the commands from running.
@@ -142,7 +142,7 @@ openssl genrsa -out test_key.pem 2048`
 
 The interactive CSR method (openssl req -new) was also used as an alternative, which prompted for input step-by-step and worked reliably.
 
-Date flags not recognized:
+2. Date flags not recognized:
 
 While attempting to create an already-expired certificate, the original approach used the -startdate and -enddate flags. 
 These were not supported in the OpenSSL version used, which caused the command to fail.
