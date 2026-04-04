@@ -67,18 +67,33 @@ The replacement certificate had:
 - A new key
 
 This shows that the expired certificate could not be reused and had to be replaced with a new one.
+a. Interactive CSR generation with Subject fields (US, CyberVisionaries Institute, shortlived.cvi.internal)
+![Generate Key and CSR](../../../../assets/screenshots/week-05/lab03-generate-key-and-csr.png)
 
+b. Creation of 1-day certificate with self-signature confirmation
+![Short Certificate Creation](../../../../assets/screenshots/week-05/lab03-short-cert-creation.png)
 
-If you include screenshots, store them in the assets folder and reference them here:
-![Generate Key and CSR](../../assets/screenshots/lab03-generate-key-and-csr.png)
-![Short Certificate Creation](../../assets/screenshots/lab03-short-cert-creation.png)
-![Short Certificate Dates](../../assets/screenshots/lab03-short-cert-dates.png)
-![Check Expiration Tests](../../assets/screenshots/lab03-checkend-tests.png)
-![Create Expired Certificate](../../assets/screenshots/lab03-expired-cert-creation.png)
-![Expired Certificate Dates](../../assets/screenshots/lab03-expired-cert-dates.png)
-![Expired Certificate Verification Error](../../assets/screenshots/lab03-expired-cert-verify-error.png)
-![Replacement Key Generation](../../assets/screenshots/lab03-replacement-key-generation.png)
-![Replacement CSR Creation](../../assets/screenshots/lab03-replacement-csr-creation.png)
+c. Short certificate validity window (Mar 31 23:37:29 2026 → Apr 1 23:37:29 2026)
+![Short Certificate Dates](../../../../assets/screenshots/week-05/lab03-short-cert-dates.png)
+
+d. Both -checkend 3600 (will not expire) and -checkend 86400 (will expire) results 
+![Check Expiration Tests](../../../../assets/screenshots/week-05/lab03-checkend-tests.png)
+
+e. Certificate creation with past dates using -not_before and -not_after flags
+![Create Expired Certificate](../../../../assets/screenshots/week-05/lab03-expired-cert-creation.png)
+
+f. Expired certificate dates (Jan 1-2, 2023) and checkend 0 result
+![Expired Certificate Dates](../../../../assets/screenshots/week-05/lab03-expired-cert-dates.png)
+
+g. Verification errors (Error 18: self-signed, Error 10: certificate has expired)
+![Expired Certificate Verification Error](../../../../assets/screenshots/week-05/lab03-expired-cert-verify-error.png)
+
+h. Interactive CSR creation for replacement certificate after the generation of a new private key for replacement certificate
+![Replacement CSR Creation](../../../../assets/screenshots/week-05/lab03-replacement-csr-creation.png)
+
+j. eplacement certificate dates (Apr 1 2026 → Apr 1 2027) and checkend 0 showing `will not expire`
+
+![Replacement Cert Verification](../../../../assets/screenshots/week-05/lab03-replacement-cert-verification.png) 
 
 ---
 
