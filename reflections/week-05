@@ -1,0 +1,51 @@
+# Week 05 Reflection
+
+## 1. What did you learn this week?
+
+This week focused on how certificates are issued, validated, and managed throughout their lifecycle. The process of generating a private key, creating a CSR, and having it signed by a Certificate Authority helped connect the theory of PKI to how trust is actually established.
+
+It also became clear that managing certificates goes beyond issuance. Concepts like expiration, renewal, replacement, and revocation showed that trust is something that must be maintained over time, not just created once.
+
+---
+
+## 2. What concept was most challenging?
+
+Understanding the difference between renewal, replacement, and revocation was the most challenging at first. They all relate to updating certificates, but each serves a different purpose.
+
+The difference became clearer when focusing on what changes: renewal extends time, replacement creates a new key and certificate, and revocation removes trust completely.
+
+---
+
+## 3. Where does this concept appear in real-world systems?
+
+These concepts appear in everyday systems such as HTTPS websites, VPN connections, and cloud services. Every secure connection depends on certificates being valid, trusted, and not expired.
+
+In enterprise environments, poor certificate management can lead to outages when certificates expire or are not renewed on time. This shows how critical proper tracking and monitoring are.
+
+---
+
+## 4. How would you explain this topic to a non-technical audience?
+
+Certificates can be compared to an ID card. A trusted authority verifies identity and issues the ID, and others trust it because they trust the authority that issued it.
+
+Over time, the ID can expire, be renewed, or be revoked if something goes wrong. Systems check these conditions before allowing access, just like checking if an ID is valid.
+
+---
+
+## 5. What questions remain?
+
+One area that still needs deeper understanding is how large organizations automate certificate management at scale, especially across different environments like cloud, on-premises, and internal systems.
+
+There is also interest in learning more about how monitoring tools and certificate inventory systems are implemented in real-world environments.
+
+---
+
+## Professional Growth Check
+
+- [x] I documented my work clearly and in my own words  
+- [x] I used structured formatting in my submission files  
+- [x] My commit message was meaningful and descriptive  
+
+---
+
+*CVI PKI Career Pathway — Foundations Phase*
