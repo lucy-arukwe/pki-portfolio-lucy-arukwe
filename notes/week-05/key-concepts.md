@@ -1,4 +1,4 @@
-# Week X Lesson Notes — [Topic Title]
+# Week X Lesson Notes — PKI in Real Environments
 
 ## 1. Core Concept
 
