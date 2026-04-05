@@ -4,11 +4,11 @@
 
 The Certificate Issuance Workflow is the five-step process that transforms identity claims into cryptographically-verified trust:
 
-1. Generate Private Key — Created by the requester, never shared with anyone (including the CA)
-2. Generate CSR (Certificate Signing Request) — Packages identity information + public key together
-3. Submit to CA — The CSR is sent to the Certificate Authority for validation
-4. Receive, Validate, and Sign — CA verifies identity claims and signs the certificate with its own private key
-5. Certificate Deployed — Signed certificate is distributed to every system that needs it
+1. Generate Private Key: Created by the requester, never shared with anyone (including the CA)
+2. Generate CSR (Certificate Signing Request): Packages identity information + public key together
+3. Submit to CA: The CSR is sent to the Certificate Authority for validation
+4. Receive, Validate, and Sign: CA verifies identity claims and signs the certificate with its own private key
+5. Certificate Deployed: Signed certificate is distributed to every system that needs it
 
 `Critical principle:` The private key never leaves the requester's possession. If compromised, someone else can forge signatures, which is why it's never shared—not even with the CA.
 
