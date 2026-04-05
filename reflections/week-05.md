@@ -1,6 +1,6 @@
 # Week 05 Reflection
 
-## 1. What did you learn this week?
+## 1. What I learned this week?
 
 This week focused on how certificates are issued, validated, and managed throughout their lifecycle. The process of generating a private key, creating a CSR, and having it signed by a Certificate Authority helped connect the theory of PKI to how trust is actually established.
 
@@ -8,7 +8,7 @@ It also became clear that managing certificates goes beyond issuance. Concepts l
 
 ---
 
-## 2. What concept was most challenging?
+## 2. The most challenging Concept this week:
 
 Understanding the difference between renewal, replacement, and revocation was the most challenging at first. They all relate to updating certificates, but each serves a different purpose.
 
