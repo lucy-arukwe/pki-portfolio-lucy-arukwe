@@ -3,7 +3,7 @@
 ## Overview
 This lab focused on understanding how certificate expiration works in practice, from detection to failure and 
 replacement. 
-Short-lived and expired certificates were created to simulate real scenarios, and OpenSSL tools were used to 
+A Short-lived, and an expired certificates were created to simulate real scenarios, and OpenSSL tools were used to 
 check validity and confirm expiration.
 
 The core PKI concept explored was certificate validity and expiration handling, showing how systems detect expired 
@@ -36,21 +36,21 @@ certificates and why timely replacement is necessary to avoid service disruption
 ---
 
 ## Results
-Include the important outputs or findings from the lab.
 
 - The short-lived certificate had the following validity window:
   notBefore=Mar 31 23:37:29 2026 GMT
   notAfter=Apr 1 23:37:29 2026 GMT
   
 - For the short-lived certificate:
-    `-checkend 3600` → Certificate will not expire (within 1 hour)
-    `-checkend 86400` → Certificate will expire (within 24 hours)
+    `-checkend 3600` = Certificate will not expire (within 1 hour)
+    `-checkend 86400` = Certificate will expire (within 24 hours)
+  
 - Verification Error for Expired Certificate:
-
-      error 18 at 0 depth lookup: self-signed certificate
+  It generated the follwoing error codes;
+      `error 18 at 0 depth lookup: self-signed certificate
       error 10 at 0 depth lookup: certificate has expired
-      error labs/week-05/submissions/expiration-stretch/test_cert_expired.pem: verification failed
-  The important part here is **"certificate has expired"**, which causes the verification to fail.
+      error labs/week-05/submissions/expiration-stretch/test_cert_expired.pem: verification failed`
+  The important part here is `certificate has expired`, which causes the verification to fail.
   
 - What changed in the replacement certificate compared to the expired one?
   Replacement Certificate Changes
@@ -67,6 +67,7 @@ The replacement certificate had:
 - A new key
 
 This shows that the expired certificate could not be reused and had to be replaced with a new one.
+
 a. Interactive CSR generation with Subject fields (US, CyberVisionaries Institute, shortlived.cvi.internal)
 ![Generate Key and CSR](../../../../assets/screenshots/week-05/lab03-generate-key-and-csr.png)
 
@@ -111,19 +112,19 @@ to expiring and allow time for replacement before issues occur.
 ---
 
 ## Explanation
-Why the results matter.
-Certificate expiration is predictable, but outages still occur when certificates are not properly tracked or monitored. 
-Without visibility into expiration dates, certificates can expire unexpectedly and cause service disruption.
+Why these results matter.
+- Certificate expiration is predictable, but outages still occur when certificates are not properly tracked or monitored. 
+  Without visibility into expiration dates, certificates can expire unexpectedly and cause service disruption.
 
-Renewal and replacement serve different purposes. Renewal extends the validity of an existing certificate, usually with the same key, 
-while replacement involves generating a new key and issuing a new certificate. 
-Replacement is preferred when stronger security is needed or when the old key should no longer be trusted.
+- Renewal and replacement serve different purposes. Renewal extends the validity of an existing certificate, usually with the same key, 
+  while replacement involves generating a new key and issuing a new certificate. 
+  Replacement is preferred when stronger security is needed or when the old key should no longer be trusted.
 
-The `openssl x509 -checkend` command can be used in monitoring scripts to check if a certificate will expire within a specific time window. 
-This allows alerts to be triggered in advance so that certificates can be updated before they expire.
+- The `openssl x509 -checkend` command can be used in monitoring scripts to check if a certificate will expire within a specific time window. 
+  This allows alerts to be triggered in advance so that certificates can be updated before they expire.
 
-Certificate inventory refers to maintaining a record of all certificates in use, including their locations, expiration dates, and ownership. 
-At enterprise scale, this is necessary to prevent unexpected outages and to manage certificates efficiently across multiple systems.
+-Certificate inventory refers to maintaining a record of all certificates in use, including their locations, expiration dates, and ownership. 
+ At enterprise scale, this is necessary to prevent unexpected outages and to manage certificates efficiently across multiple systems.
 
 
 ---
@@ -136,7 +137,11 @@ While generating keys and certificates, multi-line OpenSSL commands using backsl
 this caused syntax errors and prevented the commands from running.
 
 Running the same commands on a single line resolved the issue. For example:
-
+Instead of multi-line:
+`openssl genrsa \
+  -out test_key.pem 2048`
+  
+Single line was used:
 `bash
 openssl genrsa -out test_key.pem 2048`
 
