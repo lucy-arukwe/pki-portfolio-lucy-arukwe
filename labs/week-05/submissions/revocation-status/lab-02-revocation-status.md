@@ -36,28 +36,27 @@ Extracted the OCSP URL programmatically using `grep` and `sed`, allowing the val
 
 ## Results
 
-- What was the Subject and Issuer of the leaf certificate?
+- The Subject and Issuer of the leaf certificate:
 `Subject: CN=github.com
-Issuer: CN=Sectigo Public Server Authentication CA DV E36`
+ Issuer:  CN=Sectigo Public Server Authentication CA DV E36`
 The leaf certificate represents the website (github.com), while the issuer certificate represents the Certificate Authority that signed it. This shows that the certificate was not self-signed, but issued as part of a trust chain.
-- What OCSP URL did you find in the Authority Information Access extension?
-The OCSP responder URL found in the certificate is http://ocsp.sectigo.com.
-- What CRL Distribution Point URL did you find?
+
+- The OCSP URL found in the Authority Information Access extension:
+The OCSP responder URL found in the certificate is `http://ocsp.sectigo.com`
+
+- The CRL Distribution Point URL found:
 No CRL Distribution Point URL was found in the certificate. This suggests that revocation checking for this certificate relies primarily on OCSP, which is commonly used in modern PKI for faster, real-time status checks.
-- What was the OCSP response status for the certificate?
+
+- The OCSP response status for the certificate
 OCSP Response Status: successful
 Cert Status: good
 This Update: Mar 29 22:10:11 2026 GMT
 Next Update: Apr 5 22:10:10 2026 GMT
 What this means:
    `Status: good = Certificate has not been revoked`
-- What do "This Update" and "Next Update" tell you?
+- "This Update" and "Next Update" meaning:
 "This Update" indicates when the OCSP response was generated.
 "Next Update" shows how long the response can be trusted before checking again.
-
-
-If you include screenshots, store them in the assets folder and reference them here:
-![Description](../../assets/screenshots/week-05/your-screenshot.png)
 
 ---
 
@@ -85,8 +84,8 @@ The leaf certificate provides the serial number, while the issuer certificate id
 
 Without the issuer certificate, the system cannot determine which CA to query or properly verify the OCSP response.
 
-- What is the difference between OCSP and CRL in practice?
-OCSP:
+- Difference between OCSP and CRL in practice
+  OCSP:
 - Checks one certificate at a time
 - Real-time query/response
 - Small and fast
