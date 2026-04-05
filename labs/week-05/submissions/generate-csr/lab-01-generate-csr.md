@@ -3,7 +3,7 @@
 ## Overview
 This lab focused on understanding how a digital certificate is created from start to finish. I explored the complete certificate issuance workflow: generating a private key, creating a Certificate Signing Request (CSR), and signing it to produce a certificate. This hands-on experience reinforced how identity information and public keys are packaged into a CSR and how a Certificate Authority (CA) would process and sign that request in production.
 
-The core PKI concept being investigated was `the certificate request and issuance lifecycle` — specifically how the Subject information flows from the CSR into the final certificate, and how the private key, CSR, and certificate are cryptographically linked.
+The core PKI concept being investigated was `the certificate request and issuance lifecycle`, specifically how the Subject information flows from the CSR into the final certificate, and how the private key, CSR, and certificate are cryptographically linked.
 
 ---
 
