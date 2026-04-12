@@ -24,11 +24,16 @@ TLS failed because the hostname being accessed did not match the identities list
 
 
 - **Hostname accessed:** wrong.host.badssl.com
+  
 - **Subject CN:** *.badssl.com
+  
 - **SAN entries:** DNS:*.badssl.com, DNS:badssl.com
+  
 - **Mismatch:** The hostname `wrong.host.badssl.com` is a two-level subdomain (wrong.host), but the wildcard certificate `*.badssl.com` only matches single-level subdomains. The SAN does not explicitly list `wrong.host.badssl.com`, resulting in a hostname validation failure.
+  
 - **OpenSSL verify return code:** 0 (ok) — indicating the certificate chain is valid, but OpenSSL's command-line tool does not enforce hostname validation by default
 
+- OCSP URL present? (yes/no): no
 
 ---
 
