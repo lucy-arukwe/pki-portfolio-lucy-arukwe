@@ -8,7 +8,9 @@
 ## Incident Summary
 
 **Target system:** portal.metrogeneral.org (simulated via expired.badssl.com)
+
 **Diagnosed by:** Lucy Arukwe
+
 **Date of diagnosis:** April 5, 2026
 
 ---
