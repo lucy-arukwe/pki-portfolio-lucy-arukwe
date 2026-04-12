@@ -8,7 +8,9 @@
 ## Incident Summary
 
 **Target system:** Staff scheduling portal (simulated via wrong.host.badssl.com)
+
 **Diagnosed by:** Lucy Arukwe
+
 **Date of diagnosis:** April 6, 2026
 
 ---
