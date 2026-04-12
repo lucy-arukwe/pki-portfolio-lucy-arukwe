@@ -30,11 +30,17 @@ OpenSSL returned: Verify return code: 21 (unable to verify the first certificate
 The error showed a chain validation failure rather than an expiration or hostname mismatch issue.
 
 Evidence overview: 
+
 Subject CN: *.badssl.com
+
 Issuer CN: R13 (Let's Encrypt intermediate CA)
+
 Verification error: unable to verify the first certificate
+
 Verify return code: 21
+
 Certificates sent by server: 1 (leaf only — intermediate missing)
+
 CA Issuers URI: http://r13.i.lencr.org/
 
 ---
