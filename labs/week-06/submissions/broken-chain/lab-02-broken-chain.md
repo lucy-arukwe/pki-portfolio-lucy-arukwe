@@ -7,8 +7,10 @@
 
 ## Incident Summary
 
-**Target system:** Radiology imaging platform (simulated via incomplete-chain.badssl.com)  
+**Target system:** Radiology imaging platform (simulated via incomplete-chain.badssl.com) 
+
 **Diagnosed by:** Lucy Arukwe
+
 **Date of diagnosis:** April 6, 2026
 
 
