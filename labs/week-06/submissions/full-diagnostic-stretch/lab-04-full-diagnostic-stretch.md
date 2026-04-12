@@ -8,8 +8,11 @@
 ## PKI Incident Report
 
 **System:** Metro General EHR portal (ehr.metrogeneral.org)
+
 **Reported:** Friday, April 3, 2026 at 4:47 PM 
+
 **Author:** Lucy Arukwe
+
 **Status:** Diagnosis complete — pending remediation 
 
 ---
