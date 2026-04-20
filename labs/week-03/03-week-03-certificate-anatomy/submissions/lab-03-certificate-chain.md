@@ -44,3 +44,9 @@ Each certificate’s Issuer field matches the Subject of the certificate above i
 
 5. Why do intermediate certificates exist?
 Intermediate certificates exist to improve security and protect the root CA. Even though both root and intermediate certificates have CA:TRUE, the root CA is kept highly secure and is not used for everyday signing. Instead, intermediate CAs are used to issue certificates. If an intermediate is compromised, it can be revoked without affecting the root CA or the entire trust system.
+
+---
+
+## Challenges / Troubleshooting
+
+
