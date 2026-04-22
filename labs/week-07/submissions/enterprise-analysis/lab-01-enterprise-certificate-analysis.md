@@ -40,7 +40,7 @@ The target selected was **bankofamerica.com**, a major financial institution wit
 The connection to `bankofamerica.com:443` completed successfully. The server presented a complete three-certificate chain, showing a valid trust path from the service certificate to a trusted public root.
 
 
-![Connection success and certificate chain depth](../../../assets/screenshots/week-07/lab-01/step-01-connection-success.png)
+![Connection success and certificate chain depth](../../../assets/screenshots/week-07/lab-01/connection-success.png)
 
 ---
 
@@ -76,10 +76,10 @@ The SAN configuration is narrowly scoped to the main domain rather than a broad 
 The certificate includes fields such as jurisdiction, business category, and corporate serial number, which are characteristic of EV certificates. The issuer name, **DigiCert EV RSA CA G2**, also supports this classification. This means the certificate validates the organization’s legal identity in addition to domain ownership.
 
 
-![Certificate validity dates and subject fields](../../../assets/screenshots/week-07/lab-01/step-02-cert-validity.png)
+![Certificate validity dates and subject fields](../../../assets/screenshots/week-07/lab-01/cert-validity.png)
 
 
-![Subject Alternative Name extension](../../../assets/screenshots/week-07/lab-01/step-02-san-section.png)
+![Subject Alternative Name extension](../../../assets/screenshots/week-07/lab-01/san-section.png)
 
 ---
 
@@ -104,7 +104,7 @@ The certificate includes fields such as jurisdiction, business category, and cor
 The chain contains all expected layers: leaf certificate, intermediate CA, and root CA. This forms a valid and complete trust path.
 
 
-![Certificate chain structure showing leaf, intermediate, and root](../../../assets/screenshots/week-07/lab-01/step-03-chain-structure.png)
+![Certificate chain structure showing leaf, intermediate, and root](../../../assets/screenshots/week-07/lab-01/chain-structure.png)
 
 
 ---
@@ -128,7 +128,7 @@ TLS terminates at the **CloudFront CDN edge**.
 
 This indicates that Bank of America uses Amazon CloudFront for content delivery and edge-layer protection while still maintaining control of its own EV certificate. That approach supports both performance and brand trust.
 
-![CloudFront headers showing CDN termination](../../../assets/screenshots/week-07/lab-01/step-04-cdn-headers.png)
+![CloudFront headers showing CDN termination](../../../assets/screenshots/week-07/lab-01/cdn-headers.png)
 
 ---
 
@@ -158,7 +158,7 @@ This ensures that browsers continue to use HTTPS for future connections to the s
 
 Since OCSP stapling is not enabled, clients must perform separate revocation checks.
 
-![TLS version testing and HSTS configuration](../../../assets/screenshots/week-07/lab-01/step-05-tls-config.png)
+![TLS version testing and HSTS configuration](../../../assets/screenshots/week-07/lab-01/tls-config.png)
 
 ---
 
@@ -186,7 +186,7 @@ These are not legitimate Bank of America domains. Their naming pattern and use o
 
 This matches a paid enterprise CA renewal model rather than a 90-day issuance cycle such as Let’s Encrypt.
 
-![Certificate Transparency logs showing historical issuances](../../../assets/screenshots/week-07/lab-01/step-06-ct-logs.png)
+![Certificate Transparency logs showing historical issuances](../../../assets/screenshots/week-07/lab-01/ct-logs.png)
 
 ---
 
