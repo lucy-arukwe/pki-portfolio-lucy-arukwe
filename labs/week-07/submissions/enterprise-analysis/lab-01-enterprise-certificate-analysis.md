@@ -275,13 +275,12 @@ An early `git push` attempt failed because authentication was not configured. Th
 - `lab-01-enterprise-certificate-analysis.md` — Final write-up
 
 ### Screenshots Captured
-- `step-01-connection-success.png` — Certificate retrieval and chain depth
-- `step-02-cert-validity.png` — Validity dates and Subject fields
-- `step-02-san-section.png` — Subject Alternative Names
-- `step-03-chain-structure.png` — Complete certificate chain
-- `step-04-cdn-headers.png` — CloudFront headers showing TLS termination
-- `step-05-tls-versions.png` — TLS version support testing
-- `step-06-ct-logs.png` — Certificate Transparency log results
+- `connection-success.png` — Certificate retrieval and chain depth
+- `cert-validity.png` — Validity dates and Subject fields
+- `san-section.png` — Subject Alternative Names
+- `chain-structure.png` — Complete certificate chain
+- `cdn-headers.png` — CloudFront headers showing TLS termination
+- `tls-versions.png` — TLS version support testing
 
 **Screenshot location:**  
 `assets/screenshots/week-07/lab-01/`
