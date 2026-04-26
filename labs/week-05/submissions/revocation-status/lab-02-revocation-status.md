@@ -26,8 +26,8 @@ This hands-on experience demonstrated that certificate trust is dynamic: it depe
 3. Retrieved the full certificate chain using `openssl s\_client -showcerts`, which displays all certificates in the trust chain (leaf, intermediate CA, and root CA).
 4. Extracted the issuer certificate by copying the second certificate block from the chain output and saving it as `issuer\_cert.pem`, since this intermediate certificate is required for OCSP queries.
 5. Located the OCSP responder URL by inspecting the Authority Information Access extension within the leaf certificate.
-6. Located the OCSP responder URL by inspecting the Authority Information Access extension within the leaf certificate.
-Extracted the OCSP URL programmatically using `grep` and `sed`, allowing the value to be stored and reused in the query.
+
+6. Extracted the OCSP URL programmatically using `grep` and `sed`, allowing the value to be stored and reused in the query.
 
 7. Queried the OCSP responder using `openssl ocsp` with both the leaf and issuer certificates, sending the request to `http://ocsp.sectigo.com` to check revocation status.
 
