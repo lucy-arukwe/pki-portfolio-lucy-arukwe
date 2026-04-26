@@ -53,7 +53,7 @@ Successful verification (when trusted) confirmed that the certificate chain was 
 ## Root CA Visible in certmgr.msc:
 ![Root CA in certmgr](../../../../assets/screenshots/week-04/03_ca_installed_certmgr.png)
 
-## Signed Certifcate Created:
+## Signed Certificate Created:
 ![Signed Certificate created](../../../../assets/screenshots/week-04/04_signed_cert_created.png)
 
 ## Trust Chain Validated:
