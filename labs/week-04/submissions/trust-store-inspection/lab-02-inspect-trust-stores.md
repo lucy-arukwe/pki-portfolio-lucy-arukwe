@@ -82,5 +82,5 @@ No major technical issues were encountered during this lab. All commands execute
 ---
 
 ## Artifacts
-
+- `root_cas_raw.txt` - Windows root CA store export via certutil
 - screenshots are stored in assets/screenshots/week-04/
