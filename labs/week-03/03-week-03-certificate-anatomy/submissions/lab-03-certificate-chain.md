@@ -48,5 +48,4 @@ Intermediate certificates exist to improve security and protect the root CA. Eve
 ---
 
 ## Challenges / Troubleshooting
-
-
+There was no challenges/issues encountered.
