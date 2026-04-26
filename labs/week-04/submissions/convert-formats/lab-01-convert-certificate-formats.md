@@ -67,7 +67,8 @@ Why does a PFX require a password?
 A PFX file contains both a certificate and its associated private key. Because the private key represents identity and must remain confidential, the PFX is encrypted with a password to prevent unauthorized access.
 
 PEM vs DER vs PFX — when would each be used?
-PEM is commonly used in Linux and web server environments because it is easy to read and configure. DER is used in systems that require a binary format, such as certain Windows and Java applications. PFX is used when both the certificate and private key need to be transferred together securely, such as when installing certificates on servers or importing them into applications.
+PEM is commonly used in Linux and web server environments because it is easy to read and configure. DER is primarily used in Java and embedded/constrained systems. Windows natively favors PFX/P12 for key+cert bundles or the .cer extension (which is DER renamed) for individual certificates.
+PFX is used when both the certificate and private key need to be transferred together securely, such as when installing certificates on servers or importing them into applications.
 
 Why must private keys never be committed to GitHub?
 A private key is the core element of identity in PKI. If exposed, it allows unauthorized parties to impersonate the certificate owner, intercept encrypted communications, or sign malicious data. Once a private key is compromised, it must be revoked and replaced immediately.
