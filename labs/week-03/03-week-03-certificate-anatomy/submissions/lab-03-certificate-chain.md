@@ -80,3 +80,15 @@ Intermediate certificates exist to improve security and protect the root CA. Eve
 
 ## Challenges / Troubleshooting
 There was no challenges/issues encountered.
+
+---
+
+## Artifacts
+
+- `server.pem` - Leaf certificate from github.com
+- `intermediate.pem` - Intermediate CA certificate (Sectigo Public Server Authentication CA DV E36)
+- `root.pem` - Root CA certificate (Sectigo Public Server Authentication Root E46)
+- `lab-03-certificate-chain.md` - Lab observations and analysis
+- Screenshot: `assets/screenshots/week-03/lab-03-certificate-chain.png` - Chain verification output
+
+---
