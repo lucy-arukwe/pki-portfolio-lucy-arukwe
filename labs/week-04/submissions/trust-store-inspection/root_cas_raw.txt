@@ -1,0 +1,175 @@
+Root "Trusted Root Certification Authorities"
+================ Certificate 0 ================
+Serial Number: 79ad16a14aa0a5ad4c7358f407132e65
+Issuer: CN=Microsoft Root Certificate Authority, DC=microsoft, DC=com
+ NotBefore: 2001-05-09 8:19 PM
+ NotAfter: 2021-05-09 8:28 PM
+Subject: CN=Microsoft Root Certificate Authority, DC=microsoft, DC=com
+CA Version: V0.0
+Signature matches Public Key
+Root Certificate: Subject matches Issuer
+Cert Hash(sha1): cdd4eeae6000ac7f40c3802c171e30148030c072
+No key provider information
+Cannot find the certificate and private key for decryption.
+
+================ Certificate 1 ================
+Serial Number: 0fcc2b1a2e26644ea4daa269c0011e0fe057653d
+Issuer: C=US, O=CyberVisionaries Institute
+ NotBefore: 2026-03-28 9:13 AM
+ NotAfter: 2026-04-27 9:13 AM
+Subject: C=US, O=CyberVisionaries Institute
+Signature matches Public Key
+Root Certificate: Subject matches Issuer
+Cert Hash(sha1): c99aebb42c674ee7c3b5cfbeab349c7312def4c5
+No key provider information
+Cannot find the certificate and private key for decryption.
+
+================ Certificate 2 ================
+Serial Number: 00
+Issuer: CN=Thawte Timestamping CA, OU=Thawte Certification, O=Thawte, L=Durbanville, S=Western Cape, C=ZA
+ NotBefore: 1996-12-31 9:00 PM
+ NotAfter: 2020-12-31 8:59 PM
+Subject: CN=Thawte Timestamping CA, OU=Thawte Certification, O=Thawte, L=Durbanville, S=Western Cape, C=ZA
+Signature matches Public Key
+Root Certificate: Subject matches Issuer
+Cert Hash(sha1): be36a4562fb2ee05dbb3d32323adf445084ed656
+No key provider information
+Cannot find the certificate and private key for decryption.
+
+================ Certificate 3 ================
+Serial Number: c1008b3c3c8811d13ef663ecdf40
+Issuer: CN=Microsoft Root Authority, OU=Microsoft Corporation, OU=Copyright (c) 1997 Microsoft Corp.
+ NotBefore: 1997-01-10 4:00 AM
+ NotAfter: 2020-12-31 4:00 AM
+Subject: CN=Microsoft Root Authority, OU=Microsoft Corporation, OU=Copyright (c) 1997 Microsoft Corp.
+Signature matches Public Key
+Root Certificate: Subject matches Issuer
+Cert Hash(sha1): a43489159a520f0d93d032ccaf37e7fe20a8b419
+No key provider information
+Cannot find the certificate and private key for decryption.
+
+================ Certificate 4 ================
+Serial Number: 0f6b552f9ebf907b0f6629a9bdf4d8ce
+Issuer: CN=Symantec Enterprise Mobile Root for Microsoft, O=Symantec Corporation, C=US
+ NotBefore: 2012-03-14 9:00 PM
+ NotAfter: 2032-03-14 8:59 PM
+Subject: CN=Symantec Enterprise Mobile Root for Microsoft, O=Symantec Corporation, C=US
+Signature matches Public Key
+Root Certificate: Subject matches Issuer
+Cert Hash(sha1): 92b46c76e13054e104f230517e6e504d43ab10b5
+No key provider information
+Cannot find the certificate and private key for decryption.
+
+================ Certificate 5 ================
+Serial Number: 3f8bc8b5fc9fb29643b569d66c42e144
+Issuer: CN=Microsoft Root Certificate Authority 2011, O=Microsoft Corporation, L=Redmond, S=Washington, C=US
+ NotBefore: 2011-03-22 7:05 PM
+ NotAfter: 2036-03-22 7:13 PM
+Subject: CN=Microsoft Root Certificate Authority 2011, O=Microsoft Corporation, L=Redmond, S=Washington, C=US
+CA Version: V0.0
+Signature matches Public Key
+Root Certificate: Subject matches Issuer
+Cert Hash(sha1): 8f43288ad272f3103b6fb1428485ea3014c0bcfe
+No key provider information
+Cannot find the certificate and private key for decryption.
+
+================ Certificate 6 ================
+Serial Number: 01
+Issuer: CN=Microsoft Authenticode(tm) Root Authority, O=MSFT, C=US
+ NotBefore: 1995-01-01 5:00 AM
+ NotAfter: 1999-12-31 8:59 PM
+Subject: CN=Microsoft Authenticode(tm) Root Authority, O=MSFT, C=US
+Signature matches Public Key
+Root Certificate: Subject matches Issuer
+Cert Hash(sha1): 7f88cd7223f3c813818c994614a89c99fa3b5247
+No key provider information
+Cannot find the certificate and private key for decryption.
+
+================ Certificate 7 ================
+Serial Number: 28cc3a25bfba44ac449a9b586b4339aa
+Issuer: CN=Microsoft Root Certificate Authority 2010, O=Microsoft Corporation, L=Redmond, S=Washington, C=US
+ NotBefore: 2010-06-23 6:57 PM
+ NotAfter: 2035-06-23 7:04 PM
+Subject: CN=Microsoft Root Certificate Authority 2010, O=Microsoft Corporation, L=Redmond, S=Washington, C=US
+CA Version: V0.0
+Signature matches Public Key
+Root Certificate: Subject matches Issuer
+Cert Hash(sha1): 3b1efd3a66ea28b16697394703a72ca340a05bd5
+No key provider information
+Cannot find the certificate and private key for decryption.
+
+================ Certificate 8 ================
+Serial Number: 401ac46421b31321030ebbe4121ac51d
+Issuer: CN=VeriSign Universal Root Certification Authority, OU=(c) 2008 VeriSign, Inc. - For authorized use only, OU=VeriSign Trust Network, O=VeriSign, Inc., C=US
+ NotBefore: 2008-04-01 9:00 PM
+ NotAfter: 2037-12-01 8:59 PM
+Subject: CN=VeriSign Universal Root Certification Authority, OU=(c) 2008 VeriSign, Inc. - For authorized use only, OU=VeriSign Trust Network, O=VeriSign, Inc., C=US
+Signature matches Public Key
+Root Certificate: Subject matches Issuer
+Cert Hash(sha1): 3679ca35668772304d30a5fb873b0fa77bb70d54
+No key provider information
+Cannot find the certificate and private key for decryption.
+
+================ Certificate 9 ================
+Serial Number: 153875e1647ed1b047b4efaf41128245
+Issuer: CN=Microsoft ECC TS Root Certificate Authority 2018, O=Microsoft Corporation, L=Redmond, S=Washington, C=US
+ NotBefore: 2018-02-27 5:51 PM
+ NotAfter: 2043-02-27 6:00 PM
+Subject: CN=Microsoft ECC TS Root Certificate Authority 2018, O=Microsoft Corporation, L=Redmond, S=Washington, C=US
+CA Version: V0.0
+Signature matches Public Key
+Root Certificate: Subject matches Issuer
+Cert Hash(sha1): 31f9fc8ba3805986b721ea7295c65b3a44534274
+No key provider information
+Cannot find the certificate and private key for decryption.
+
+================ Certificate 10 ================
+Serial Number: 01
+Issuer: OU=Copyright (c) 1997 Microsoft Corp., OU=Microsoft Time Stamping Service Root, OU=Microsoft Corporation, O=Microsoft Trust Network
+ NotBefore: 1997-05-13 1:12 PM
+ NotAfter: 1999-12-30 8:59 PM
+Subject: OU=Copyright (c) 1997 Microsoft Corp., OU=Microsoft Time Stamping Service Root, OU=Microsoft Corporation, O=Microsoft Trust Network
+Signature matches Public Key
+Root Certificate: Subject matches Issuer
+Cert Hash(sha1): 245c97df7514e7cf2df8be72ae957b9e04741e85
+No key provider information
+Cannot find the certificate and private key for decryption.
+
+================ Certificate 11 ================
+Serial Number: 4a19d2388c82591ca55d735f155ddca3
+Issuer: OU=NO LIABILITY ACCEPTED, (c)97 VeriSign, Inc., OU=VeriSign Time Stamping Service Root, OU=VeriSign, Inc., O=VeriSign Trust Network
+ NotBefore: 1997-05-11 9:00 PM
+ NotAfter: 2004-01-07 8:59 PM
+Subject: OU=NO LIABILITY ACCEPTED, (c)97 VeriSign, Inc., OU=VeriSign Time Stamping Service Root, OU=VeriSign, Inc., O=VeriSign Trust Network
+Signature matches Public Key
+Root Certificate: Subject matches Issuer
+Cert Hash(sha1): 18f7c1fcc3090203fd5baa2f861a754976c8dd25
+No key provider information
+Cannot find the certificate and private key for decryption.
+
+================ Certificate 12 ================
+Serial Number: 14982666dc7ccd8f4053677bb999ec85
+Issuer: CN=Microsoft ECC Product Root Certificate Authority 2018, O=Microsoft Corporation, L=Redmond, S=Washington, C=US
+ NotBefore: 2018-02-27 5:42 PM
+ NotAfter: 2043-02-27 5:50 PM
+Subject: CN=Microsoft ECC Product Root Certificate Authority 2018, O=Microsoft Corporation, L=Redmond, S=Washington, C=US
+CA Version: V0.0
+Signature matches Public Key
+Root Certificate: Subject matches Issuer
+Cert Hash(sha1): 06f1aa330b927b753a40e68cdf22e34bcbef3352
+No key provider information
+Cannot find the certificate and private key for decryption.
+
+================ Certificate 13 ================
+Serial Number: 2fd67a432293329045e953343ee27466
+Issuer: CN=Microsoft Time Stamp Root Certificate Authority 2014, O=Microsoft Corporation, L=Redmond, S=Washington, C=US
+ NotBefore: 2014-10-22 7:08 PM
+ NotAfter: 2039-10-22 7:15 PM
+Subject: CN=Microsoft Time Stamp Root Certificate Authority 2014, O=Microsoft Corporation, L=Redmond, S=Washington, C=US
+CA Version: V0.0
+Signature matches Public Key
+Root Certificate: Subject matches Issuer
+Cert Hash(sha1): 0119e81be9a14cd8e22f40ac118c687ecba3f4d8
+No key provider information
+Cannot find the certificate and private key for decryption.
+CertUtil: -store command completed successfully.
