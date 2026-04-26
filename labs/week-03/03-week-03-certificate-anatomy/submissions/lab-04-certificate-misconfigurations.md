@@ -14,18 +14,21 @@ No. Modern browsers will reject this certificate even if the CN matches the doma
 
 Modern browsers require the Subject Alternative Name (SAN) extension to validate which domains a certificate is valid for. The Common Name (CN) field was historically used for this purpose, but reliance on CN alone has been deprecated. Without a SAN extension, browsers cannot confirm that the certificate matches the requested domain, even if the CN appears correct.  
 
-A user would likely see an error such as "Your connection is not private" or a hostname mismatch error like "NET::ERR_CERT_COMMON_NAME_INVALID"
+A user would likely see an error such as "Your connection is not private" or a hostname mismatch error like `"NET::ERR_CERT_COMMON_NAME_INVALID"`
+
 ---
  
 ## Scenario 2 — Incorrect Extended Key Usage
 
 **Would a browser accept this certificate for a web server?**
+
 No. A browser would reject this certificate for HTTPS use.
 
 **Analysis:**
 
 Extended Key Usage (EKU) defines the specific purpose a certificate is allowed to serve. For HTTPS, the certificate must include "TLS Web Server Authentication". A certificate that only includes "Client Authentication" is intended for identifying clients to a server, not for identifying a server to users.  
 Using it on a web server would result in a certificate usage error, and the browser would reject the connection as untrusted.
+
 ---
 
 ## Scenario 3 — Expired Certificate
