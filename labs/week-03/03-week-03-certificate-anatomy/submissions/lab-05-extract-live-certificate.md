@@ -22,7 +22,7 @@ This lab focused on retrieving the leaf TLS certificate from github.com using Op
 | Not Before               | Mar 6 00:00:00 2026 GMT                                                 |
 | Not After                | Jun 3 23:59:59 2026 GMT                                                 |
 | Public Key Algorithm     | id-ecPublicKey (256 bit, NIST P-256)                                    |
-| Subject Alternative Name | DNS:github.com, DNS:www.github.com                                      |
+| Subject Alternative Name | DNS: github.com, DNS: www.github.com                                    |
 | Key Usage                | Digital Signature (critical)                                            |
 | Extended Key Usage       | TLS Web Server Authentication                                           |
 
