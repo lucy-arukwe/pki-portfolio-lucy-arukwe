@@ -32,28 +32,25 @@ and the certificate’s validity period.
 ## Observations
 
 1. The certificate is issued by Google Trust Services, specifically the intermediate CA labeled WE2.
-   This indicates that the certificate is not signed directly by a root CA but by an intermediate authority within Google’s trust hierarchy.
+   This indicates that the certificate is not signed directly by a root CA but by an intermediate        authority within Google’s trust hierarchy.
 
-2. The Subject is a wildcard domain (*.google.com), allowing the certificate to secure multiple subdomains under the google.com namespace.
-   This approach supports scalability and simplifies certificate management across distributed services.
+2. The Subject is a wildcard domain (*.google.com), allowing the certificate to secure multiple
+   subdomains under the google.com namespace. This approach supports scalability and simplifies          certificate management across distributed services.
 
-3. The validity period is short, approximately 84 days. Short-lived certificates reduce the risk window in case of key compromise and align with
-   modern certificate lifecycle practices.
+4. The validity period is short, approximately 84 days. Short-lived certificates reduce the risk         window in case of key compromise and align with modern certificate lifecycle practices.
 
-4. The certificate uses ECDSA with a 256-bit key on the NIST P-256 curve. This reflects a shift toward elliptic curve cryptography, which provides strong
-   security with improved performance compared to traditional RSA.
+5. The certificate uses ECDSA with a 256-bit key on the NIST P-256 curve. This reflects a shift          toward elliptic curve cryptography, which provides strong security with improved performance          compared to traditional RSA.
 
-6. The Issuer field plays a critical role in trust validation. It identifies the Certificate Authority responsible for issuing the certificate, allowing clients
-   to verify the certificate through a trusted chain up to a root CA.
+6. The Issuer field plays a critical role in trust validation. It identifies the Certificate             Authority responsible for issuing the certificate, allowing clients to verify the certificate         through a trusted chain up to a root CA.
 
 ---
 
 ## Key Findings
 
-- The use of ECDSA with SHA-256 highlights a modern cryptographic approach focused on efficiency and strong security.
-- The wildcard subject enables coverage of multiple subdomains using a single certificate, which is common in large-scale environments.
-- The short validity window reflects current best practices that prioritize frequent certificate rotation.
-- The Basic Constraints extension includes CA:FALSE, confirming that the certificate is a leaf certificate and cannot be used to issue other certificates.
+- The use of ECDSA with SHA-256 highlights a modern cryptographic approach focused on efficiency and    strong security.
+- The wildcard subject enables coverage of multiple subdomains using a single certificate, which is     common in large-scale environments.
+- The short validity window reflects current best practices that prioritize frequent certificate        rotation.
+- The Basic Constraints extension includes CA:FALSE, confirming that the certificate is a leaf          certificate and cannot be used to issue other certificates.
 
 ---
 
