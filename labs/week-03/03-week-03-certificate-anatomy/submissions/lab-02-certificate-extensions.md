@@ -1,9 +1,7 @@
 # Lab 02 — Investigate Certificate Extensions
 
 ## Overview
-This lab focused on inspecting the X.509v3 extensions of the Google leaf certificate retrieved in Lab 01. The objective was to understand how certificate extensions 
-define and enforce usage boundaries, including domain coverage, permitted cryptographic operations, and whether a certificate can function as a Certificate Authority.
-
+This lab focused on inspecting the X.509v3 extensions of the Google leaf certificate retrieved in Lab 01.he focus was on understanding how extensions define and restrict certificate behavior, including which domains it covers, what cryptographic operations it permits, and whether it can act as a Certificate Authority.
 ---
 
 ## Environment
@@ -18,7 +16,7 @@ define and enforce usage boundaries, including domain coverage, permitted crypto
 ### Subject Alternative Name (SAN)
 DNS:*.google.com, DNS:*.appengine.google.com, DNS:*.bdn.dev, DNS:*.origin-test.bdn.dev, DNS:*.cloud.google.com, DNS:*.crowdsource.google.com, DNS:*.datacompute.google.com, 
 DNS:*.google.ca, DNS:*.google.cl, DNS:*.google.co.in, DNS:*.google.co.jp, DNS:*.google.co.uk, DNS:*.google.com.ar, DNS:*.google.com.au, DNS:*.google.com.br, DNS:*.google.com.co, DNS:*.google.com.mx, 
-DNS:google.com, DNS:*.youtube.com, DNS:youtube.com (and additional Google-owned domains)
+DNS:google.com, DNS:*.youtube.com, DNS:youtube.com (and many more Google-owned domains)
 
 ### Key Usage
 Digital Signature (critical)
@@ -33,10 +31,9 @@ CA:FALSE (critical)
 
 ## Observations
 
-1. The SAN extension contains a large number of Google-owned domains, including multiple wildcard entries. This allows a single certificate to secure a wide range of
-   services across Google’s infrastructure.
+1. The SAN extension contains a large number of Google-owned domains, including multiple wildcard entries. This allows a single certificate to secure a wide range of services across Google’s infrastructure.
 
-3. Key Usage is limited to Digital Signature, indicating that the certificate is used for authentication and integrity rather than key encipherment operations.
+3. Key Usage is restricted to Digital Signature only, indicating that the certificate is used for authentication and integrity rather than key encipherment operations.
 
 4. The Extended Key Usage field restricts the certificate to TLS Web Server Authentication. This ensures it is only valid for securing HTTPS connections and cannot
 
