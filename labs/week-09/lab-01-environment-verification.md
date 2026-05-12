@@ -176,8 +176,8 @@ or issues connecting the Certification Authority to Active Directory.
 
 ## Submission Checklist
 
-- [ ] All five steps completed
-- [ ] All command outputs pasted
-- [ ] Reflection section filled in
-- [ ] File saved as `lab-01-environment-verification.md`
-- [ ] File committed to my portfolio repo under `labs/week-09/`
+- [x] All five steps completed
+- [x] All command outputs pasted
+- [x] Reflection section filled in
+- [x] File saved as `lab-01-environment-verification.md`
+- [x] File committed to my portfolio repo under `labs/week-09/`
