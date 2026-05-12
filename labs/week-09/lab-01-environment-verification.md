@@ -93,7 +93,7 @@ Running  CertSvc                            Active Directory Certificate Service
 
 **Screenshot or description of what you observed in certsrv.msc:**
 
-![CVI Issuing CA 1 Console](../../../../assets/screenshots/week-09/lab01-certsrv-console.png)
+![CVI Issuing CA 1 Console](../../assets/screenshots/week-09/lab01-certsrv-console.png)
 
 ```
 The Certification Authority console opened successfully and displayed CVI Issuing CA 1 in the left 
