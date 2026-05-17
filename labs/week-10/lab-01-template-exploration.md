@@ -52,7 +52,8 @@ Open the Certificate Templates console: **Run → certtmpl.msc**
 The User template is designed for end users within Active Directory. 
 The certificate can be used for user authentication, secure email, and Encrypting File System (EFS). 
 The template is integrated with Active Directory and automatically builds identity information from the user account.
-The option "Do not automatically reenroll if a duplicate certificate exists in Active Directory" is enabled to prevent unnecessary certificate issuance. 
+The option "Do not automatically reenroll if a duplicate certificate exists in Active Directory" is enabled to prevent
+unnecessary certificate issuance. 
 ```
 
 **Request Handling tab — Purpose:**
@@ -184,8 +185,10 @@ web servers that may host different DNS names or external services not directly 
 Why does the Web Server template use "Supplied in the request" for the subject name rather than building it from Active Directory?
 
 ```
-The Web Server template uses "Supplied in the request" because web servers often require specific DNS names such as public website addresses or application names.
-These names may not exactly match the Active Directory computer object. Allowing the requester to define the subject name provides flexibility for TLS certificates
+The Web Server template uses "Supplied in the request" because web servers often require
+specific DNS names such as public website addresses or application names.
+These names may not exactly match the Active Directory computer object.
+Allowing the requester to define the subject name provides flexibility for TLS certificates
 used by websites, load balancers, reverse proxies, and other web-based services.
 ```
 
@@ -198,41 +201,43 @@ used by websites, load balancers, reverse proxies, and other web-based services.
 1. Right-clicked the **Web Server** template → **Duplicate Template**
 2. Selected compatibility settings:
 
-   - Certification Authority: ________________
-   - Certificate Recipient: ________________
+   - Certification Authority: Windows Server 2012 R2
+   - Certificate Recipient: Windows 7 / Server 2008 R2
 
 3. Opened the properties of the new duplicate template.
 
 **General tab — changes made:**
 
-| Setting | Original Value | New Value |
-|---------|---------------|-----------|
-| Template display name | Web Server | CVI-WebServer |
-| Template name | WebServer | CVI-WebServer |
-| Validity period | | |
-| Renewal period | | |
+| Setting               | Original Value | New Value     |
+|-----------------------|----------------|---------------|
+| Template display name | Web Server     |               |
+| Template name         | WebServer      | CVI-WebServer |
+| Validity period       | 2 years        | 1 year        |
+| Renewal period        | 6 weeks        | 6 weeks       |
 
 **Rationale for validity period chosen:**
 
 ```
-(why did you choose this period?)
+A one-year validity period reduces long-term exposure if a certificate is compromised. 
+Shorter certificate lifetimes are considered better security practice because they force
+more frequent renewal and replacement. This aligns with current industry best practices for TLS certificates.
 ```
 
 **Subject Name tab — changes made:**
 
-| Setting | Change Made | Rationale |
-|---------|-------------|-----------|
-| | | |
+| Setting     | Change Made | Rationale |
+|-------------|-------------|-----------|
+|Subject Name | Supply in the request confirmed | Allows administrators to specify DNS names and server identities manually during enrollment  |
 
 **Security tab — permissions confirmed:**
 
-| Group / Account | Enroll | Autoenroll |
-|-----------------|--------|------------|
-| Domain Computers | | |
-| Authenticated Users | | |
+| Group / Account     | Enroll    | Autoenroll |
+|---------------------|-----------|------------|
+| Domain Computers    | Yes       | No         |
+| Authenticated Users | Read only | No         |
 
 **Template saved:**
-- [ ] Yes — template visible in certtmpl.msc
+- [x] Yes — template visible in certtmpl.msc
 
 ---
 
@@ -247,21 +252,30 @@ certutil -template CVI-WebServer
 **Full output:**
 
 ```
-(paste output here)
+ certutil -template command had limited output. Template details documented from certtmpl.msc GUI:
+
 ```
 
 **From the certutil output — record the following:**
 
-| Field | Value from certutil Output |
-|-------|---------------------------|
-| Template Name | |
-| Template OID | |
-| Schema Version | |
-| Key Usage | |
-| Enhanced Key Usage (EKU) | |
-| Validity Period | |
-| Subject Name flags | |
+| Field                              | Value from certutil Output |
+|------------------------------------|----------------------------|
+| Template Name                      | CVI-WebServer              |
+| Template OID                       | CVI-WebServer              |
+| Schema Version                     | 2                          |
+| Key Usage                          | 100.3                      |
+| Enhanced Key Usage (EKU)           |                            |
+| Validity Period                    | 1 years                    |
+| Subject Name flags                 |                            |
 
+Key Usage:
+
+- Digital signature
+- Key encipherment
+- Critical extension
+
+Enhanced Key Usage: Server Authentication
+Subject Name: Supply in the request
 ---
 
 ## Reflection
@@ -269,25 +283,30 @@ certutil -template CVI-WebServer
 **Why does AD CS require you to duplicate a built-in template rather than modifying it directly?**
 
 ```
-(your answer here)
+AD CS prevents administrators from directly modifying built-in templates to protect the
+stability and consistency of the PKI environment. Built-in templates are considered default baseline configurations that
+Microsoft expects to remain unchanged. Duplicating a template creates a customizable copy while preserving
+the original template for compatibility and recovery purposes.
 ```
 
 **One setting in the template you found unexpected or would want to explore further:**
 
 ```
-(your observation here)
+One setting I found interesting was how the compatibility settings affect the available template options. When the template
+was set to Windows Server 2012 R2 and Windows 7 / Server 2008 R2 compatibility, several settings became grayed out or unavailable.
+It showed how certificate templates need to balance newer security features with support for older systems.
 ```
 
 ---
 
 ## Submission Checklist
 
-- [ ] Pre-lab verification completed and outputs recorded
-- [ ] Part A: All three templates explored with tab-level observations
-- [ ] Part A: Comparison question answered in own words
-- [ ] Part B: Duplicate template created as CVI-WebServer
-- [ ] Part B: All changes documented with rationale
+- [x] Pre-lab verification completed and outputs recorded
+- [x] Part A: All three templates explored with tab-level observations
+- [x] Part A: Comparison question answered in own words
+- [x] Part B: Duplicate template created as CVI-WebServer
+- [x] Part B: All changes documented with rationale
 - [ ] Part C: certutil -template output pasted and key fields extracted
-- [ ] Reflection section completed
-- [ ] File saved as `lab-01-template-exploration.md`
-- [ ] File committed to portfolio repo under `labs/week-10/`
+- [x] Reflection section completed
+- [x] File saved as `lab-01-template-exploration.md`
+- [x] File committed to portfolio repo under `labs/week-10/`
