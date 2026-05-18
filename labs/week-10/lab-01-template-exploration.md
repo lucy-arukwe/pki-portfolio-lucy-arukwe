@@ -271,8 +271,9 @@ This displayed the template properties, EKU settings, key usage, subject name fl
 | Enhanced Key Usage (EKU)           | Server Authentication                                                            |
 | Validity Period                    | 1 years                                                                          |
 | Subject Name flags                 | CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT                                                |
-
+```
 The certutil output confirmed that the CVI-WebServer template was configured correctly for TLS web server certificates. The EKU was set to Server Authentication, ensuring the certificate is trusted specifically for TLS web server authentication purposes. The key usage allowed Digital Signature and Key Encipherment, and the subject name flag confirmed that the subject must be supplied in the request rather than automatically pulled from Active Directory.
+```
 ---
 
 ## Reflection
