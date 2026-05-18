@@ -210,7 +210,7 @@ used by websites, load balancers, reverse proxies, and other web-based services.
 
 | Setting               | Original Value | New Value     |
 |-----------------------|----------------|---------------|
-| Template display name | Web Server     |  CVI-WebServer|
+| Template display name | Web Server     | CVI-WebServer |
 | Template name         | WebServer      | CVI-WebServer |
 | Validity period       | 2 years        | 1 year        |
 | Renewal period        | 6 weeks        | 6 weeks       |
@@ -218,9 +218,9 @@ used by websites, load balancers, reverse proxies, and other web-based services.
 **Rationale for validity period chosen:**
 
 ```
-A one-year validity period reduces long-term exposure if a certificate is compromised. 
-Shorter certificate lifetimes are considered better security practice because they force
-more frequent renewal and replacement. This aligns with current industry best practices for TLS certificates.
+A one-year validity period was chosen because it gives the certificate a shorter trusted lifetime while still being practical for administration. If a certificate or its private key is ever compromised, a shorter validity period reduces how long that certificate can remain trusted before it naturally expires. It also encourages regular renewal, which helps administrators review certificate usage, confirm ownership, and replace certificates before they become outdated.
+
+This also follows the PKI validity hierarchy. The end-entity certificate should not outlive the issuing CA, and the template validity period should stay within the limits enforced by the CA. Since the CVI Issuing CA has a longer validity period, a one-year web server certificate is appropriate for this lab. It supports better security while still giving enough time for normal certificate management and renewal.
 ```
 
 **Subject Name tab — changes made:**
