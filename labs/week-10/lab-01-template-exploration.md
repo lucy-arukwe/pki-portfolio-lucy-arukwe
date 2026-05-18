@@ -210,7 +210,7 @@ used by websites, load balancers, reverse proxies, and other web-based services.
 
 | Setting               | Original Value | New Value     |
 |-----------------------|----------------|---------------|
-| Template display name | Web Server     |               |
+| Template display name | Web Server     |  CVI-WebServer|
 | Template name         | WebServer      | CVI-WebServer |
 | Validity period       | 2 years        | 1 year        |
 | Renewal period        | 6 weeks        | 6 weeks       |
