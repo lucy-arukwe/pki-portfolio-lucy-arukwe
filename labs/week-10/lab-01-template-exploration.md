@@ -252,30 +252,27 @@ certutil -template CVI-WebServer
 **Full output:**
 
 ```
- certutil -template command had limited output. Template details documented from certtmpl.msc GUI:
+ *certutil -template`* command had limited output.
+The detailed template information was retrieved using:
 
+certutil -v -template CVI-WebServer
+
+This displayed the template properties, EKU settings, key usage, subject name flags, validity period, permissions, and template OID.
 ```
 
 **From the certutil output — record the following:**
 
-| Field                              | Value from certutil Output |
-|------------------------------------|----------------------------|
-| Template Name                      | CVI-WebServer              |
-| Template OID                       | CVI-WebServer              |
-| Schema Version                     | 2                          |
-| Key Usage                          | 100.3                      |
-| Enhanced Key Usage (EKU)           |                            |
-| Validity Period                    | 1 years                    |
-| Subject Name flags                 |                            |
+| Field                              | Value from certutil Output                                                       |
+|------------------------------------|----------------------------------------------------------------------------------|
+| Template Name                      | CVI-WebServer                                                                    |
+| Template OID                       |1.3.6.1.4.1.311.21.8.15886664.4298044.8996776.14853544.7902291.169.6737681.317150 |
+| Schema Version                     | 2                                                                                |
+| Key Usage                          | Digital Signature, Key Encipherment                                              |
+| Enhanced Key Usage (EKU)           | Server Authentication                                                            |
+| Validity Period                    | 1 years                                                                          |
+| Subject Name flags                 | CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT                                                |
 
-Key Usage:
-
-- Digital signature
-- Key encipherment
-- Critical extension
-
-Enhanced Key Usage: Server Authentication
-Subject Name: Supply in the request
+The certutil output confirmed that the CVI-WebServer template was configured correctly for TLS web server certificates. The EKU was set to Server Authentication, ensuring the certificate is trusted specifically for TLS web server authentication purposes. The key usage allowed Digital Signature and Key Encipherment, and the subject name flag confirmed that the subject must be supplied in the request rather than automatically pulled from Active Directory.
 ---
 
 ## Reflection
