@@ -192,7 +192,7 @@ Access:     local
 **What the output proves:**
 
 ```
-The output proves that the key pair is stored as permanent objects inside the token, not in temporary session memory or on the filesystem. The presence of both private and public key objects with matching labels and IDs confirms that the keypair is intact and accessible via the PKCS#11 interface. Most importantly, the private key attributes "sensitive, always sensitive, never extractable, local" demonstrate that this key cannot be copied or exported — it exists only within the HSM boundary.
+The output proves that the key pair is stored as permanent objects inside the token, not in temporary session memory or on the filesystem. The presence of both private and public key objects with matching labels and IDs confirms that the keypair exists as persistent token objects accessible through the PKCS#11 interface. Most importantly, the private key attributes "sensitive, always sensitive, never extractable, local" demonstrate that this key cannot be copied or exported, it exists only within the HSM boundary.
 This is the fundamental protection that makes HSM storage superior to software key storage.
 ```
 
@@ -246,8 +246,8 @@ Fill in the table based on the lesson and demonstration:
 **In your own words: what does a physical HSM protect against that SoftHSM2 cannot?**
 
 ```
-A physical HSM protects against physical extraction and hardware tampering. Even if an attacker gains server access,
-the private key still cannot be copied out of the device because cryptographic operations happen inside the hardware boundary.
+A physical HSM protects against physical extraction and hardware tampering. Even if an attacker gains server access, the private key still cannot be copied out of the device because cryptographic operations happen inside a tamper-resistant hardware boundary.
+
 SoftHSM2 teaches the workflow, but its keys are still ultimately stored in software on the operating system.
 ```
 
@@ -316,7 +316,7 @@ misuse, or insider threats in enterprise environments.
 
 ```
 One thing I want to understand better is how backup and recovery work in a real enterprise HSM environment. As explained in the Week 10 Lesson 4 notes,
-the private key is supposed to remain inside the HSM and never be extractable.
+the private key is designed to remain inside the HSM and never be extractable.
 That made me curious about how organizations recover those keys if hardware fails or disaster recovery is needed.
 
 I would like to understand whether enterprises use secure HSM-to-HSM transfers, encrypted backup shares, or quorum-based recovery processes.
