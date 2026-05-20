@@ -46,7 +46,7 @@ The CVI-WebServer template exists in Active Directory but is not yet published t
 The CVI-WebServer template appeared successfully under the Certificate Templates node in certsrv.msc. The Intended Purpose displayed as Server Authentication.
 ```
 
-![CVI-WebServer Template Published](../../assets/screenshots/week-10/cvi-webserver-template-node.png)
+![CVI-WebServer Template Published](../../assets/screenshots/week-10/cvi-webserver-template-published.png)
 
 ---
 
