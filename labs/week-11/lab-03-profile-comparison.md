@@ -31,14 +31,14 @@ certutil -store My
 ```
 
 **Week 10 TLS certificate present:**
-- [X] Yes — Thumbprint: ________________
+- [X] Yes — Thumbprint: 11280bd800780eadada46133da11ee63d3c63e534d
 - [ ] No — contact instructor before proceeding
 
 **Step 2 — Record all three thumbprints**
 
 | Certificate              | Template           | Thumbprint                                |
 |--------------------------|--------------------|-------------------------------------------|
-| TLS (Week 10, Lab 02)    | CVI-WebServer      |                                           |
+| TLS (Week 10, Lab 02)    | CVI-WebServer      | 11280bd800780eadada46133da11ee63d3c63e534d|
 | Service Account (Lab 01) | CVI-ServiceAccount | 762c31ae2ec7b9430ad86b6a616199e4369a74c7  |
 | Code Signing (Lab 02)    | CVI-CodeSigning    | 647515E560C6CD47BC3A9507024D1356F73EEA32  |
 
@@ -57,7 +57,48 @@ certutil -store My "<TLS-thumbprint>"
 **Full certutil output:**
 
 ```
-(paste output here)
+PS C:\Windows\system32> certutil -store My
+
+My "Personal"
+
+================ Certificate 0 ================
+Serial Number: 5800000002f7714edc7f317c46000000000002
+Issuer: CN=CVI Root CA, DC=corp, DC=cvilab, DC=local
+NotBefore: 4/25/2026 7:26 PM
+NotAfter: 4/25/2027 7:36 PM
+Subject: CN=CVI Issuing CA 1, DC=corp, DC=cvilab, DC=local
+CA Version: V0.0
+Certificate Template Name (Certificate Type): SubCA
+Non-root Certificate
+Template: SubCA, Subordinate Certification Authority
+
+Cert Hash(sha1): 5137a597de2c3085ec5816c7f11edc18cfcdbaF8
+
+  Key Container = CVI Issuing CA 1
+  Unique container name: b52f658bb3f263e6f529f3a0187c63bc_f0a99c17-76d3-498a-97de-2992c06105fd
+  Provider = Microsoft Software Key Storage Provider
+
+Signature test passed
+
+================ Certificate 1 ================
+Serial Number: 440000000a0d2ff137199552aa00000000000a
+Issuer: CN=CVI Issuing CA 1, DC=corp, DC=cvilab, DC=local
+NotBefore: 5/24/2026 12:46 PM
+NotAfter: 4/25/2027 7:36 PM
+Subject: CN=CVI-WebServer
+Non-root Certificate
+Template: CVI-WebServer
+
+Cert Hash(sha1): 11280bd800780eadada46133da11ee63d3c63e534d
+
+  Key Container = a330acdeaad10128a9b113d1e949ce6a_f0a99c17-76d3-498a-97de-2992c06105fd
+  Simple container name: te-CVI-WebServer-70056b4a-5fd1-4994-977c-bb8fe0ba5d78
+  Provider = Microsoft RSA SChannel Cryptographic Provider
+
+Private key is NOT exportable
+Encryption test passed
+
+CertUtil: -store command completed successfully.
 ```
 
 ---
@@ -99,6 +140,8 @@ Subject                     : CN=PKI Admin, OU=PKI Admins, DC=corp, DC=cvilab, D
 ---
 
 ### Certificate 3 — Code Signing (CVI-CodeSigning)
+
+`certutil -store My "<CodeSigning-thumbprint>"`
 
 ```powershell
 certutil -store My "<CodeSigning-thumbprint>"
@@ -148,10 +191,10 @@ Complete the following table using the certutil outputs above.
 | Key Usage       | Digital Signature, Key Encipherment      | Digital Signature, Key Encipherment      | Digital Signature                        |
 | EKU             | Server Authentication                    | Client Authentication                    | Code Signing                             |
 | EKU OID(s)      | 1.3.6.1.5.5.7.3.1                        | 1.3.6.1.5.5.7.3.2                        | 1.3.6.1.5.5.7.3.3                        |
-| Validity Period | 5/19/2026 → 4/25/2027                    | 5/24/2026 → 4/25/2027                    | 5/23/2026 → 4/25/2027                    |
-| Serial Number   |4400000008ba5509c4353dc3c6000000000008    | 4400000009217b3df4da50401000000000009    | 4400000007172A43E46A06421E000000000007   |
-| Thumbprint      | daacf145ee32a4f7be35e0cddd4bee5c2595e232 | 762c31ae2ec7b9430ad86b6a616199e4369a74c7 | 647515E560C6CD47BC3A9507024D1356F73EEA32 |
-| Request ID      | 4                                        | 9                                        | 7                                        |
+| Validity Period | 5/24/2026 → 4/25/2027                    | 5/24/2026 → 4/25/2027                    | 5/23/2026 → 4/25/2027                    |
+| Serial Number   |440000000a0d2ff137199552aa00000000000a    | 4400000009217b3df4da50401000000000009    | 4400000007172A43E46A06421E000000000007   |
+| Thumbprint      | 11280bd800780eadada46133da11ee63d3c63e534d | 762c31ae2ec7b9430ad86b6a616199e4369a74c7 | 647515E560C6CD47BC3A9507024D1356F73EEA32 |
+| Request ID      | 10                                        | 9                                        | 7                                        |
 ---
 
 ## Part B — Written Analysis
