@@ -149,20 +149,20 @@ Navigate to the Personal → Certificates store and double-click the issued cert
 |------------|------------------------------|
 | Issued to  | CVI-WebServer                |
 | Issued by  | CVI Issuing CA 1             |
-| Valid from | 5/19/2026 6:45 AM            |
+| Valid from | 5/24/2026 12:46 AM           |
 | Valid to   | 4/25/2027 7:36 PM            |
 
 **Details tab — record the following fields:**
 
 | Field                | Value                                         |
 |----------------------|-----------------------------------------------|
-| Serial Number        | 44000000049ed3c730770f574700000000004         |
+| Serial Number        | 440000000a0d2ff137199552aa00000000000a        |
 | Signature Algorithm  | sha256RSA                                     |
 | Subject              | CN=CVI-WebServer                              |
 | Key Usage            | Digital Signature, Key Encipherment           |
 | Enhanced Key Usage   | Server Authentication                         |
 | Subject Alternative Name (if present) |Not Present                   |
-| Thumbprint           | 7bcd7f64ed6f40d278293635afaae52c8e8cc7e3      |          
+| Thumbprint           | 11280bd800780eada46133da11ee63d3c63e534d      |          
 
 ---
 
@@ -178,27 +178,43 @@ Replace `<thumbprint>` with the thumbprint value (no spaces).
 
 **Full certutil output:**
 
-```
+```Powershell
 **Full certutil output:**
 
-```powershell
+PS C:\Windows\system32> certutil -store My
+My "Personal"
 ================ Certificate 0 ================
-Serial Number: 44000000049ed3c730770f574700000000004
+Serial Number: 5800000002f7714edc7f317c46000000000002
+Issuer: CN=CVI Root CA, DC=corp, DC=cvilab, DC=local
+ NotBefore: 4/25/2026 7:26 PM
+ NotAfter: 4/25/2027 7:36 PM
+Subject: CN=CVI Issuing CA 1, DC=corp, DC=cvilab, DC=local
+CA Version: V0.0
+Certificate Template Name (Certificate Type): SubCA
+Non-root Certificate
+Template: SubCA, Subordinate Certification Authority
+Cert Hash(sha1): 5137a597de2c3085ec5816c7f11edc18cfcdbaf8
+  Key Container = CVI Issuing CA 1
+  Unique container name: b52f658bb3f263e6f529f3a0187c63bc_f0a99c17-76d3-498a-97de-2992c06105fd
+  Provider = Microsoft Software Key Storage Provider
+Signature test passed
+
+================ Certificate 1 ================
+Serial Number: 440000000a0d2ff137199552aa00000000000a
 Issuer: CN=CVI Issuing CA 1, DC=corp, DC=cvilab, DC=local
-NotBefore: 5/19/2026 6:45 AM
-NotAfter: 4/25/2027 7:36 PM
+ NotBefore: 5/24/2026 12:46 PM
+ NotAfter: 4/25/2027 7:36 PM
 Subject: CN=CVI-WebServer
 Non-root Certificate
 Template: CVI-WebServer
-
-Cert Hash(sha1): 7bcd7f64ed6f40d278293635afaae52c8e8cc7e3
-
-Provider = Microsoft RSA SChannel Cryptographic Provider
-
+Cert Hash(sha1): 11280bd800780eada46133da11ee63d3c63e534d
+  Key Container = a330acdeaad10128a9b113d1e949ce6a_f0a99c17-76d3-498a-97de-2992c06105fd
+  Simple container name: te-CVI-WebServer-70056b4a-5fd1-4994-977c-bb8fe0ba5d78
+  Provider = Microsoft RSA SChannel Cryptographic Provider
 Private key is NOT exportable
 Encryption test passed
-
 CertUtil: -store command completed successfully.
+PS C:\Windows\system32>
 ```
 
 ---
@@ -214,7 +230,7 @@ Navigate to **certsrv.msc → CVI Issuing CA 1 → Issued Certificates**.
 
 | Column                      | Value             |
 |---------------------------- |-------------------|
-| Request ID                  | 4                 |
+| Request ID                  | 10                |
 | Requester Name              | CORP\PKI-SRV01$   |
 | Certificate Template        | CVI-WebServer     |
 | Issued Common Name          | CVI-WebServer     |
