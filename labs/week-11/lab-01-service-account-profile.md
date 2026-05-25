@@ -23,8 +23,8 @@ Get-ADUser -Identity svc.autoenroll -Properties UserPrincipalName | Select-Objec
 ```
 
 **All checks passed:**
-- [] Yes
-- [x] No — describe the issue and how you resolved it:
+- [x] Yes
+- [ ] No — describe the issue and how you resolved it:
 
 ```
 Initially, the Get-ADUser command returned a CommandNotFoundException because the Active Directory PowerShell module was unavailable in the session. The issue was resolved by installing/loading the RSAT Active Directory module, which allowed the AD cmdlets to function correctly.
@@ -58,12 +58,12 @@ Document every setting with a reason. This is the design record for the template
 
 **1 — Key Usage**
 
-| Key Usage          | Included? | Reason                                                         |
-|--------------------|-----------|----------------------------------------------------------------|
-| Digital Signature  | Yes       | Required for authentication signing                            |
-| Key Encipherment   | Yes       | Required for secure TLS session key exchange                   |
-| Data Encipherment  | No        | Not required for this authentication workflow                  |         
-| Non-Repudiation    | No        | Not intended for legal signing or document integrity workflows |                                       
+| Key Usage          | Included? | Reason                                                                  |
+|--------------------|-----------|-------------------------------------------------------------------------|
+| Digital Signature  | Yes       | Required for authentication signing                                     |
+| Key Encipherment   | Yes       |Supports secure session key exchange during TLS authentication workflows |
+| Data Encipherment  | No        | Not required for this authentication workflow                           |         
+| Non-Repudiation    | No        | Not intended for legal signing or document integrity workflows          |                                       
 
 **Explanation of Key Usage decisions:**
 
@@ -83,7 +83,7 @@ Digital Signature supports authentication signing operations, while Key Encipher
 **Explanation of EKU decisions:**
 
 ```
-Only Client Authentication was included because the service account certificate was intended to authenticate to services and systems. Other EKUs such as Secure Email, Code Signing, and Server Authentication were removed to follow the principle of least privilege and reduce misuse potential.
+Only Client Authentication was included because the service account certificate was intended to authenticate to services and systems. Other EKUs such as Secure Email, Code Signing, and Server Authentication were removed to follow the principle of least privilege and reduce unnecessary certificate capabilities and limit attack surface
 ```
 
 **3 — Subject Name**
@@ -96,7 +96,7 @@ Only Client Authentication was included because the service account certificate 
 **Explanation of Subject Name decision:**
 
 ```
-The template used “Build from Active Directory” because the service account already existed as a managed domain identity. Allowing users to manually supply the subject name could allow impersonation or incorrect identity assignment. Using the AD identity ensured consistency and centralized identity control.
+The template used “Build from Active Directory” because the service account already existed as a managed domain identity. Allowing users to manually supply the subject name could allow unauthorized subject impersonation or incorrect identity assignment. Using the AD identity ensured consistency and centralized identity control.
 ```
 
 **4 — Validity Period**
@@ -117,13 +117,13 @@ A 1-year validity period was selected to balance operational stability with secu
 | Group / Account     | Read | Enroll | Autoenroll | Reason                                      |
 |---------------------|------|--------|------------|---------------------------------------------|
 | Authenticated Users | Yes  | No     | No         | Allows visibility without enrollment rights |
-| CORP\svc.autoenroll | Yes  | Yes    | Yes        | Intended service identity                   |
+| CORP\svc.autoenroll | Yes  | Yes    | No         | Intended service identity                   |
 | Domain Computers    | No   | No     | No         | Not required for this template              |
 
 **Explanation of enrollment permission decisions:**
 
 ```
-Enrollment rights were restricted to only the svc.autoenroll account to prevent unauthorized users from requesting the certificate. This reduces the risk of impersonation and misuse of the service account identity.
+Enrollment permissions were restricted to only the svc.autoenroll account to ensure that only the intended non-human identity could request the certificate. Restricting enrollment rights reduces the risk of unauthorized certificate issuance, subject impersonation, and misuse of the service account identity. Authenticated Users were granted Read permission only so the template remained visible in the enrollment process without allowing unrestricted certificate requests. This follows the principle of least privilege and helps reduce the blast radius if another domain account becomes compromised
 ```
 
 **General tab — Template names:**
@@ -132,7 +132,7 @@ Enrollment rights were restricted to only the svc.autoenroll account to prevent 
 |--------------------------|-------=-------------|
 | Template display name    | CVI Service Account |
 | Template name (internal) | CVI-ServiceAccount  |
-| Schema version           | 4                   |
+| Schema version           | 2                   |
 
 **Template saved and visible in certtmpl.msc:**
 - [x] Yes
@@ -180,7 +180,7 @@ This ensured that certificate enrollment occurred under the correct user identit
 
 Final Successful Enrollment Steps
 Opened `mmc.exe` using the `svc.autoenroll` account
-Added the `ertificates` snap-in
+Added the `certificates` snap-in
 Selected `My user account`
 Navigated to `Personal → Certificates`
 Right-clicked `Personal → All Tasks → Request New Certificate`
@@ -269,6 +269,7 @@ Cert Hash(sha1): 762c31ae2ec7b9430ad86b6a616199e4369a74c7
 Encryption test passed
 CertUtil: -store command completed successfully.
 ```
+`Key Usage  Digital Signature, Key Encipherment (configured in template)`
 
 **From the certutil output — record the following:**
 
@@ -327,7 +328,7 @@ The enrollment process also differs operationally. User certificates are usually
 ```
 Using passwords for service accounts creates operational and security risks. Service account passwords are often long-lived and may be stored in scripts, configuration files, or scheduled tasks. If a password becomes exposed, attackers may gain unauthorized access to services and systems.
 
-Certificate-based authentication improves lifecycle control because certificates have defined expiration periods, can be revoked quickly, and are centrally audited by the CA. Certificates also reduce the risk of password spraying and credential reuse attacks.
+Certificate-based authentication improves lifecycle control because certificates have defined expiration periods, can be revoked quickly, and are centrally issued, monitored, and audited by the CA. Certificates also reduce the risk of password spraying and credential reuse attacks.
 ```
 
 ---
@@ -339,13 +340,13 @@ Certificate-based authentication improves lifecycle control because certificates
 ```
 One of the most valuable parts of this lab was understanding how identity type affects certificate enrollment behavior. Initially, the MMC “Service account” workflow from the resource pack did not display the svc.autoenroll account, even though it was functioning as a service identity. Troubleshooting this issue helped clarify the difference between a Windows managed service identity and an Active Directory user principal being used operationally as a service account.
 
-Another important takeaway was realizing how much control certificate templates provide over security and operational behavior. Small configuration decisions such as EKUs, enrollment permissions, subject name handling, and private key export settings can significantly affect how certificates are used and protected in production environments. The lab also reinforced why certificate-based authentication is often more secure and manageable than relying only on passwords for service identities.
+Another important takeaway was realizing how much control certificate templates provide over security and operational behavior. Small configuration decisions such as EKUs, enrollment permissions, subject name handling, and private key export settings can significantly affect how certificates are used and protected in production environments.The lab also reinforced why certificate-based authentication provides stronger lifecycle control and operational security than relying only on passwords for service identities.
 ```
 
 **What would you change about this template if this were a production environment rather than a lab?**
 
 ```
-If this were a production environment, I would add stricter lifecycle and issuance controls around the service account certificate workflow. In the lab environment, certificates were configured to auto-issue for simplicity, but in production I would consider enabling approval workflows for highly privileged service accounts or sensitive authentication systems.
+If this were a production environment, I would add stricter lifecycle and issuance controls around the service account certificate workflow. In the lab environment, certificates were configured to auto-issue for simplicity, but in production I would consider enabling approval workflows forhigh-value or highly privileged service accounts.
 
 I would also implement certificate lifecycle monitoring and automated renewal workflows. The lesson notes emphasized how poor certificate tracking and expiration management can lead to operational outages if certificates are not renewed on time. In a production PKI environment, automated renewal, expiration alerting, and centralized certificate inventory management would help reduce operational risk and improve visibility across systems.
 
