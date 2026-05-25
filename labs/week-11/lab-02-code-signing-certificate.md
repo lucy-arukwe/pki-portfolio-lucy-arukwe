@@ -30,8 +30,8 @@ Open the Certificate Templates console: **Run → certtmpl.msc**
 **Source template duplicated:** Code Signing (use the built-in Code Signing template)
 
 **Compatibility settings:**
-- Certification Authority: Windows Server 2012 R2
-- Certificate Recipient:   Windows 7 / Server 2008 R2
+- Certification Authority: Windows Server 2003
+- Certificate Recipient:   Windows XP / Server 2003
 
 ### Design Decisions
 
@@ -65,8 +65,7 @@ specifically identifies Digital Signature as the correct key usage for Code Sign
 
 ```
 The Code Signing EKU controls what the certificate is trusted to do at the operating system and application layer.
-PowerShell checks for the presence of the Code Signing EKU before accepting a signature as trusted. If other EKUs were added
-unnecessarily, the certificate could potentially be trusted for purposes beyond code signing, which increases risk.
+PowerShell checks for the presence of the Code Signing EKU before accepting a signature as trusted. If additional EKUs were added unnecessarily, the certificate could become trusted for purposes beyond code signing, which would unnecessarily expand the certificate’s trust scope.
 ```
 
 **3 — Subject Name**
@@ -81,7 +80,7 @@ unnecessarily, the certificate could potentially be trusted for purposes beyond 
 | Setting                     | Value     | Reason                                                         |
 |-----------------------------|-----------|----------------------------------------------------------------|
 | Validity period             | 1 year    | Matches the software distribution lifecycle                    |
-| Enroll — account(s) granted | pki.admin | Restricts issuance to a trusted administrator                  |                                           
+| Enroll — account(s) granted | pki.admin | Restricts issuance to a trusted administrator                  |                              
 | Autoenroll                  | Disabled  | Prevents automatic issuance of high-trust signing certificates |                                          
 
 **Template names:**
@@ -361,6 +360,7 @@ are high-trust credentials. A compromised code signing certificate could allow m
 
 Restricting enrollment alone is important, but adding managerial approval creates another control point before issuance.
 This reduces the risk of accidental issuance, privilege abuse, or compromised administrative accounts obtaining signing certificates without oversight.
+This is especially important because a compromised code signing certificate becomes a software supply chain security risk rather than only a PKI issue.
 ```
 
 ---
