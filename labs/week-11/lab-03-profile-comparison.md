@@ -116,39 +116,6 @@ certutil -store -service svc.autoenroll My "<ServiceAccount-thumbprint>"
 ```
 
 **Full certutil output:**
-
-```powershell
-PSPath                      : Microsoft.PowerShell.Security\Certificate::CurrentUser\My\647515E560C6CD47BC3A9507024D1356F73EEA32
-PSParentPath                : Microsoft.PowerShell.Security\Certificate::CurrentUser\My
-PSChildName                 : 647515E560C6CD47BC3A9507024D1356F73EEA32
-PSDrive                     : Cert
-PSProvider                  : Microsoft.PowerShell.Security\Certificate
-PSIsContainer               : False
-EnhancedKeyUsageList        : {Code Signing (1.3.6.1.5.5.7.3.3)}
-DnsNameList                 : {PKI Admin}
-Archived                    : False
-Issuer                      : CN=CVI Issuing CA 1, DC=corp, DC=cvilab, DC=local
-NotAfter                    : 4/25/2027 7:36:58 PM
-NotBefore                   : 5/23/2026 9:22:21 AM
-HasPrivateKey               : True
-SerialNumber                : 4400000007172A43E46A06421E000000000007
-Thumbprint                  : 647515E560C6CD47BC3A9507024D1356F73EEA32
-Issuer                      : CN=CVI Issuing CA 1, DC=corp, DC=cvilab, DC=local
-Subject                     : CN=PKI Admin, OU=PKI Admins, DC=corp, DC=cvilab, DC=local
-```
-
----
-
-### Certificate 3 — Code Signing (CVI-CodeSigning)
-
-`certutil -store My "<CodeSigning-thumbprint>"`
-
-```powershell
-certutil -store My "<CodeSigning-thumbprint>"
-```
-
-**Full certutil output:**
-
 ```
 C:\Windows\system32>whoami
 corp\svc.autoenroll
@@ -176,6 +143,39 @@ Encryption test passed
 
 CertUtil: -store command completed successfully.
 ```
+
+---
+
+### Certificate 3 — Code Signing (CVI-CodeSigning)
+
+`certutil -store My "<CodeSigning-thumbprint>"`
+
+```powershell
+certutil -store My "<CodeSigning-thumbprint>"
+```
+
+**Full certutil output:**
+
+```
+```powershell
+PSPath                      : Microsoft.PowerShell.Security\Certificate::CurrentUser\My\647515E560C6CD47BC3A9507024D1356F73EEA32
+PSParentPath                : Microsoft.PowerShell.Security\Certificate::CurrentUser\My
+PSChildName                 : 647515E560C6CD47BC3A9507024D1356F73EEA32
+PSDrive                     : Cert
+PSProvider                  : Microsoft.PowerShell.Security\Certificate
+PSIsContainer               : False
+EnhancedKeyUsageList        : {Code Signing (1.3.6.1.5.5.7.3.3)}
+DnsNameList                 : {PKI Admin}
+Archived                    : False
+Issuer                      : CN=CVI Issuing CA 1, DC=corp, DC=cvilab, DC=local
+NotAfter                    : 4/25/2027 7:36:58 PM
+NotBefore                   : 5/23/2026 9:22:21 AM
+HasPrivateKey               : True
+SerialNumber                : 4400000007172A43E46A06421E000000000007
+Thumbprint                  : 647515E560C6CD47BC3A9507024D1356F73EEA32
+Issuer                      : CN=CVI Issuing CA 1, DC=corp, DC=cvilab, DC=local
+Subject                     : CN=PKI Admin, OU=PKI Admins, DC=corp, DC=cvilab, DC=local
+```
 ---
 
 ### Comparison Table
@@ -188,11 +188,11 @@ Complete the following table using the certutil outputs above.
 | Subject         | CN=CVI-WebServer                         | CN=Svc Autoenroll                        | CN=PKI Admin                             |
 | Subject Source  | Supplied in request                      | Build from Active Directory              | Build from Active Directory              |
 | Issuer          | CVI Issuing CA 1                         | CVI Issuing CA 1                         | CVI Issuing CA 1                         |
-| Key Usage       | Digital Signature, Key Encipherment      | Digital Signature, Key Encipherment      | Digital Signature                        |
+| Key Usage       | Digital Signature, Key Encipherment      | Digital Signature and Key Encipherment (Configured) | Digital Signature             |
 | EKU             | Server Authentication                    | Client Authentication                    | Code Signing                             |
 | EKU OID(s)      | 1.3.6.1.5.5.7.3.1                        | 1.3.6.1.5.5.7.3.2                        | 1.3.6.1.5.5.7.3.3                        |
 | Validity Period | 5/24/2026 → 4/25/2027                    | 5/24/2026 → 4/25/2027                    | 5/23/2026 → 4/25/2027                    |
-| Serial Number   |440000000a0d2ff137199552aa00000000000a    | 4400000009217b3df4da50401000000000009    | 4400000007172A43E46A06421E000000000007   |
+| Serial Number   | 440000000a0d2ff137199552aa00000000000a    | 4400000009217b3df4da50401000000000009    | 4400000007172A43E46A06421E000000000007   |
 | Thumbprint      | 11280bd800780eadada46133da11ee63d3c63e534d | 762c31ae2ec7b9430ad86b6a616199e4369a74c7 | 647515E560C6CD47BC3A9507024D1356F73EEA32 |
 | Request ID      | 10                                        | 9                                        | 7                                        |
 ---
@@ -208,7 +208,7 @@ Each of the three certificates has different Key Usage settings. Explain *why* e
 ```
 Each certificate used different Key Usage settings because each one supported a different cryptographic operation and trust workflow.
 
-The TLS certificate and the service account certificate both included Digital Signature and Key Encipherment. In the TLS certificate, Digital Signature supported the TLS handshake and server authentication process, while Key Encipherment supported secure session key exchange between the client and the server. The service account certificate used the same two Key Usage settings because it also participated in secure authentication workflows and mutual TLS-style communication where encrypted session establishment was required. Even though the TLS certificate represented a server identity and the service account certificate represented a non-human AD identity, both certificates still needed to support secure authenticated communication channels.
+The TLS certificate and the service account certificate both included Digital Signature and Key Encipherment. In the TLS certificate, Digital Signature supported the TLS handshake and server authentication process, while Key Encipherment supported secure session key exchange between the client and the server. The service account certificate used the same two Key Usage settings because it also participated in secure authentication workflows and certificate-based authentication workflows where encrypted session establishment was required. Even though the TLS certificate represented a server identity and the service account certificate represented a non-human AD identity, both certificates still needed to support secure authenticated communication channels.
 
 The code signing certificate was different because it was not encrypting communications or establishing TLS sessions. Its only purpose was to digitally sign PowerShell scripts and prove file integrity. Because of this, only Digital Signature was required. Key Encipherment was intentionally removed because the certificate was not designed for encryption or secure channel establishment. During the hash mismatch test, modifying the signed script caused the signature validation to fail immediately, demonstrating that the certificate was protecting the integrity of the script contents rather than encrypting the file itself.
 ```
@@ -238,7 +238,7 @@ The TLS certificate uses "Supplied in request" for its subject. The service acco
 ```
 The TLS certificate used “Supply in the request” for the subject name because server certificates often represent hostnames, DNS names, or external services that may not directly exist as Active Directory identities. In real-world environments, web servers, APIs, VPN gateways, and applications commonly require certificates tied to specific DNS names or SAN entries rather than user principals stored in AD. Because of this, manually supplying the subject name is more flexible for TLS service identities.
 
-The service account and code signing certificates used “Build from Active Directory” because both certificates represented identities that already existed in AD. The service account certificate represented the svc.autoenroll non-human identity, while the code signing certificate represented the pki.admin administrative identity. Using AD-supplied subject information ensured the identities were centrally managed and not manually self-asserted during enrollment.
+The service account and code signing certificates used “Build from Active Directory” because both certificates represented identities that already existed in AD. The service account certificate represented the svc.autoenroll non-human identity, while the code signing certificate represented the pki.admin administrative identity. Using AD-supplied subject information ensured the identities were centrally managed, consistently named, and not manually self-asserted during enrollment.
 ```
 
 ---
