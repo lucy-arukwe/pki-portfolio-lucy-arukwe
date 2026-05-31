@@ -186,15 +186,6 @@ Navigated to `Personal → Certificates`
 Right-clicked `Personal → All Tasks → Request New Certificate`
 
 
-**Steps performed:**
-
-1. Opened **mmc.exe** → **File → Add/Remove Snap-in**
-2. Added **Certificates** snap-in
-3. Selected: **Service account** → **Local computer**
-4. Entered service account: CVI-Service Account
-5. Navigated to **Personal → Certificates**
-6. Right-clicked → **All Tasks → Request New Certificate**
-
 **Enrollment wizard — enrollment policy selected:**
 
 ```
