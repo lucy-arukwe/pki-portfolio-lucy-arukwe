@@ -1,7 +1,7 @@
 # Lab 02: Configure and Test the OCSP Responder
 
-**Student Name:**  
-**Date Completed:**  
+**Student Name:** Lucy Arukwe   
+**Date Completed:** June 10, 2026 
 **Phase:** 2 | **Week:** 12  
 **Submission Path:** `labs/week-12/lab-02-ocsp-responder.md`
 
@@ -12,6 +12,102 @@
 Complete Lab 01 before starting Lab 02. You need:
 - A **revoked certificate** from Lab 01 (for OCSP Revoked status testing)
 - A **valid, non-revoked certificate** (your TLS cert from Week 10 or another cert from Week 11 that you did not revoke)
+
+---
+
+## Known Environment Note
+
+The lab OVA was built without HTTP-based AIA and CDP extensions on the CA. This means certificates issued before Part 0 will show only LDAP URLs in their AIA and CDP extensions — no `http://pki-srv01.corp.cvilab.local/ocsp` entry will appear. This is not something you caused or misconfigured. Part 0 below corrects this before you proceed.
+
+---
+
+## Part 0 — Configure HTTP AIA and CDP Extensions on the CA
+
+> **Why this matters:** The Online Responder requires an HTTP-accessible OCSP URL in the AIA extension of issued certificates. Without it, relying parties cannot locate the OCSP responder, and the Online Responder snap-in will report stale or unavailable CRL data. This part adds the correct HTTP entries to the CA and re-issues your test certificates so they reflect the correct URLs.
+
+### Step 1 — Add HTTP CDP and AIA Extensions
+
+1. On **PKI-SRV01**, open an **elevated PowerShell prompt**
+2. Run the following commands exactly as shown:
+
+```powershell
+# Set HTTP CDP (CRL Distribution Point)
+certutil -setreg CA\CRLPublicationURLs "65:C:\Windows\system32\CertSrv\CertEnroll\%3%8%9.crl\n6:http://pki-srv01.corp.cvilab.local/CertEnroll/%3%8%9.crl"
+
+# Set HTTP AIA (CA certificate download + OCSP)
+certutil -setreg CA\CACertPublicationURLs "1:C:\Windows\system32\CertSrv\CertEnroll\%1_%3%4.crt\n2:http://pki-srv01.corp.cvilab.local/CertEnroll/%1_%3%4.crt\n32:http://pki-srv01.corp.cvilab.local/ocsp"
+```
+
+3. Restart the Certificate Services and publish a fresh CRL:
+
+```powershell
+net stop certsvc
+net start certsvc
+certutil -CRL
+```
+
+Expected output from `certutil -CRL`:
+```
+CRL published.
+```
+
+> **What the flags mean:** In the CDP string, `65` = publish to the local file system and include in certificates. `6` = publish to the HTTP URL and include in certificates. In the AIA string, `1` = local file, `2` = HTTP download URL for the CA cert, `32` = OCSP URL.
+
+**HTTP AIA and CDP configured and CertSvc restarted:**
+- [x] Yes
+- [ ] No — describe the error:
+      
+The initial `certutil -CRL` after restart returned `RPC_S_SERVER_UNAVAILABLE` because CertSvc had not fully started yet. Waiting for 30 seconds and rerunning `certutil -CRL` resolved the issue and returned success.
+
+```
+CertUtil: -CRL command completed successfully.
+```
+
+### Step 2 — Re-Issue Your Test Certificates
+
+Because the CA extension changes only apply to newly issued certificates, you need to re-issue the two certificates you will use in Parts D and E: one valid cert and one that you will revoke.
+
+1. In **certsrv.msc** on PKI-SRV01, issue a new certificate using any available template (WebServer or a template from a prior lab)
+2. Export it as a `.cer` file — this will be your **valid test certificate** for Part D
+3. Issue a second certificate from the same template
+4. Export it as a second `.cer` file — you will revoke this one in Step 3
+
+> If you have an existing valid certificate from Week 10 or 11 and prefer to keep it, you may re-use it — but note that it will not contain the HTTP OCSP URL in its AIA extension. For Part D and E to work as documented, use the newly issued certificates.
+
+### Step 3 — Revoke the Second Certificate
+
+1. In **certsrv.msc**, locate the second certificate you just issued under **Issued Certificates**
+2. Right-click it → **All Tasks → Revoke Certificate**
+3. Select reason **Key Compromise** → click **Yes**
+4. Publish a new CRL immediately:
+
+```powershell
+certutil -CRL
+```
+
+5. This revoked certificate will be your **revoked test certificate** for Part D — it replaces the Lab 01 revoked certificate for the purposes of OCSP testing
+
+### Step 4 — Confirm the HTTP OCSP URL Appears in the New Certificate
+
+1. Run a dump of your newly issued valid certificate:
+
+```powershell
+certutil -dump <valid-certificate.cer> | findstr /i "ocsp"
+```
+
+Expected output should include:
+```
+OCSP Authority Info Access
+    URL=http://pki-srv01.corp.cvilab.local/ocsp
+```
+
+**HTTP OCSP URL confirmed present in newly issued certificate:**
+- [x] Yes
+- [ ] No — do not proceed. Check that `certutil -CRL` ran without error and that CertSvc restarted successfully. Re-issue the certificate and try again.
+
+```
+URL=http://pki-srv01.corp.cvilab.local/ocsp
+```
 
 ---
 
@@ -69,11 +165,13 @@ Running  OCSPSvc  Online Responder Service
 > **If OCSPSvc does not appear:** The role installation may not have completed. Check Server Manager → Local Server for any pending configuration tasks. A server restart may be required on some configurations.
 
 **Installation completed successfully:**
-- [ ] Yes
+- [x] Yes
 - [ ] No — describe the error:
 
 ```
-(paste Get-Service OCSPSvc output here — confirm Status is Running)
+Status   Name               DisplayName
+------   ----               -----------
+Running  OCSPSvc            Online Responder Service
 ```
 
 ---
@@ -130,16 +228,16 @@ If Online Responder is not visible in Administrative Tools:
 ```
 
 **CA certificate found and selected:**
-- [ ] Yes
+- [x] Yes
 - [ ] No — describe:
 
 **Status indicator after configuration:**
-- [ ] Green (operational)
+- [x] Green (operational)
 - [ ] Yellow (warning — describe below)
 - [ ] Red (error — describe below)
 
 ```
-(describe what the snap-in shows — any warnings, errors, or confirmation of green status)
+The Online Responder snap-in showed "CVI Issuing CA 1 Revocation — Working" with a green status indicator.
 ```
 
 ---
@@ -159,7 +257,15 @@ certutil -store My
 2. Locate the certificate with `OCSP Signing` in its Enhanced Key Usage section
 
 ```
-(paste the output — identify the OCSP signing certificate entry)
+================ Certificate 1 ================
+Serial Number: 440000000b8298b71c9da81a5a00000000000b
+Issuer: CN=CVI Issuing CA 1, DC=corp, DC=cvilab, DC=local
+ NotBefore: 5/31/2026 6:44 AM
+ NotAfter: 6/14/2026 6:44 AM
+Subject: CN=PKI-SRV01.corp.cvilab.local
+Non-root Certificate
+Template: OCSPResponseSigning, OCSP Response Signing
+Cert Hash(sha1): 8c8d530de5bb54072e6c9194bdd9e9695fb51546
 ```
 
 ### Step 2 — Inspect the OCSP Signing Certificate
@@ -169,18 +275,24 @@ certutil -store My
 ```powershell
 certutil -store My "<OCSP signing cert subject or thumbprint>"
 ```
+The certificate was exported and dumped for full extension inspection:
+
+```powershell
+certutil -store My "440000000b8298b71c9da81a5a00000000000b" ocsp-signing.cer
+certutil -dump ocsp-signing.cer
+```
 
 ### Step 3 — Verify the Required Properties
 
 1. Confirm the following properties are present in the certutil output:
 
-| Property | Expected Value | Observed Value |
+ Property | Expected Value | Observed Value |
 |---|---|---|
-| Extended Key Usage | OCSP Signing — OID 1.3.6.1.5.5.7.3.9 | |
-| id-pkix-ocsp-nocheck extension | Present — OID 1.3.6.1.5.5.7.48.1.5 | |
-| Key Usage | Digital Signature | |
-| Issuer | CVI Issuing CA 1 | |
-| Validity (NotAfter) | In the future | |
+| Extended Key Usage | OCSP Signing — OID 1.3.6.1.5.5.7.3.9 | Present — `OCSP Signing (1.3.6.1.5.5.7.3.9)` |
+| id-pkix-ocsp-nocheck extension | Present — OID 1.3.6.1.5.5.7.48.1.5 | Present — `OCSP No Revocation Checking` |
+| Key Usage | Digital Signature | Present — `Digital Signature (80)` |
+| Issuer | CVI Issuing CA 1 | Present — `CN=CVI Issuing CA 1` |
+| Validity (NotAfter) | In the future | `6/14/2026 6:44 AM` — valid at time of lab |
 
 **Why these properties are required:**
 
@@ -196,11 +308,11 @@ certutil -store My "<OCSP signing cert subject or thumbprint>"
 **OCSP signing certificate subject:**
 
 ```
-(paste the CN or subject from the signing certificate)
+CN=PKI-SRV01.corp.cvilab.local
 ```
 
 **All expected properties present:**
-- [ ] Yes
+- [x] Yes
 - [ ] No — describe what is missing:
 
 ---
@@ -223,8 +335,15 @@ http://pki-srv01.corp.cvilab.local/ocsp
 **OCSP URL found in the AIA extension:**
 
 ```
-(paste the OCSP URL)
+Authority Key Identifier
+    Authority Information Access
+        [1]Authority Info Access
+             Access Method=Certification Authority Issuer (1.3.6.1.5.5.7.48.2)
+        [2]Authority Info Access
+                  URL=http://pki-srv01.corp.cvilab.local/ocsp
 ```
+During initial testing, `certutil -URL` returned Failed for the OCSP URL. Investigation showed IIS was returning a 404 for `/ocsp` because the Online Responder ISAPI virtual directory had not been registered with IIS. Running `certutil -vocsproot` followed by `iisreset` resolved the issue and allowed OCSP queries to succeed.
+
 
 ### Step 2 — Test a Valid Certificate
 
@@ -232,7 +351,7 @@ http://pki-srv01.corp.cvilab.local/ocsp
 2. Run:
 
 ```powershell
-certutil -URL <valid-certificate.cer>
+certutil -URL valid-cert.cer
 ```
 
 3. In the URL Retrieval Tool window:
@@ -242,13 +361,15 @@ certutil -URL <valid-certificate.cer>
 Expected result: **OK (0) — Certificate is Good**
 
 **OCSP response for the VALID certificate:**
-- [ ] Good
+- [x] Good
 - [ ] Revoked (unexpected — investigate)
 - [ ] Unknown
 - [ ] Connection timeout / error
 
 ```
-(paste or describe the certutil -URL output for the valid certificate)
+Status: Verified
+Type: OCSP
+URL: [0.0] http://pki-srv01.corp.cvilab.local/ocsp
 ```
 
 ### Step 3 — Test the Revoked Certificate from Lab 01
@@ -256,7 +377,7 @@ Expected result: **OK (0) — Certificate is Good**
 1. Run:
 
 ```powershell
-certutil -URL <revoked-certificate.cer>
+certutil -URL revoke-cert.cer
 ```
 
 2. Select **OCSP** → click **Retrieve**
@@ -266,13 +387,13 @@ Expected result: **Certificate is Revoked**
 > **If you get "Good" for the revoked certificate:** The OCSP responder is reading a stale CRL that does not yet include the Lab 01 revocation. Run `certutil -CRL` to force a fresh CRL publication, wait 60 seconds, and retest.
 
 **OCSP response for the REVOKED certificate:**
-- [ ] Revoked
+- [X] Revoked
 - [ ] Good (unexpected — investigate using the note above)
 - [ ] Unknown
 - [ ] Connection timeout / error
 
 ```
-(paste or describe the certutil -URL output for the revoked certificate)
+For me, the URL Retrieval Tool showed "Verified" for both certificates, which in this tool means the URL was reachable and returned a valid OCSP response — not that the certificate is good. The actual revocation status was confirmed using `certutil -verify -urlfetch` in Step 4.
 ```
 
 ### Step 4 — Run Full Certificate Verification on Both Certificates
@@ -289,14 +410,29 @@ certutil -verify <revoked-certificate.cer>
 
 **certutil -verify output for the VALID certificate:**
 
+```powershell
+certutil -verify -urlfetch valid-cert.cer
 ```
-(paste output — confirm verification completes successfully)
+
+```
+ChainContext.dwInfoStatus = CERT_TRUST_HAS_PREFERRED_ISSUER (0x100)
+Certificate OCSP: Verified — http://pki-srv01.corp.cvilab.local/ocsp
+Leaf certificate revocation check passed
 ```
 
 **certutil -verify output for the REVOKED certificate:**
 
+```powershell
+certutil -verify -urlfetch revoke-cert.cer
 ```
-(paste output — confirm CRYPT_E_REVOKED or similar error)
+
+```
+ChainContext.dwErrorStatus = CERT_TRUST_IS_REVOKED (0x4)
+Element.dwErrorStatus = CERT_TRUST_IS_REVOKED (0x4)
+Certificate OCSP: Verified — http://pki-srv01.corp.cvilab.local/ocsp
+The certificate is revoked. 0x80092010 (-2146885616 CRYPT_E_REVOKED)
+Certificate is REVOKED
+Leaf certificate is REVOKED (Reason=1)
 ```
 
 ---
@@ -308,7 +444,7 @@ certutil -verify <revoked-certificate.cer>
 1. Run a full dump of one of your certificates:
 
 ```powershell
-certutil -dump <certificate.cer>
+certutil -dump valid-cert.cer
 ```
 
 ### Step 2 — Locate the Authority Information Access Section
@@ -326,21 +462,23 @@ certutil -dump <certificate.cer>
 **CA Issuers URL:**
 
 ```
-(the URL that points to the issuing CA certificate for chain building)
+http://pki-srv01.corp.cvilab.local/CertEnroll/PKI-SRV01.corp.cvilab.local_CVI Issuing CA 1.crt
 ```
 
 **OCSP URL:**
 
 ```
-(the URL that points to the Online Responder — confirm it matches what you used in Part D)
+http://pki-srv01.corp.cvilab.local/ocsp
 ```
 
 **Explain in one sentence what each URL is used for by a relying party:**
 
 ```
-CA Issuers URL:
+CA Issuers URL:  Used by the relying party to download the issuing CA certificate and complete the
+certificate chain when the CA certificate is not already present in the local trust store.
 
-OCSP URL:
+OCSP URL: Used by the relying party to send a real-time query to the Online Responder and receive
+a Good, Revoked, or Unknown status for the certificate being validated.
 ```
 
 ---
@@ -352,48 +490,71 @@ Answer all questions in your own words. Write in complete sentences.
 **1. What is the operational difference between a relying party downloading a CRL and sending an OCSP query? From an operational standpoint, what does each approach trade off?**
 
 ```
-(your answer here)
+A CRL requires the relying party to download a list of all revoked certificates and check whether
+the certificate being validated appears on that list. An OCSP query sends a request for the status
+of a specific certificate and receives a direct response of Good, Revoked, or Unknown.
+Operationally, CRLs reduce the load on the CA infrastructure because clients can reuse a
+downloaded list, but they may not contain the most recent revocation information until a new CRL
+is published. OCSP provides more current revocation status for individual certificates, but it
+depends on the availability and responsiveness of the Online Responder.
 ```
 
 **2. The OCSP signing certificate has two properties not found on standard end-entity certificates. Name them, give their OIDs, and explain why each is required.**
 
 ```
-(your answer here)
+The second property is the id-pkix-ocsp-nocheck extension with OID 1.3.6.1.5.5.7.48.1.5. This
+tells relying parties not to check the revocation status of the OCSP signing certificate itself.
+Without it, checking an OCSP response would require a second OCSP query to verify the signing
+certificate, creating an infinite circular dependency.
 ```
 
 **3. Your Online Responder reads the CA's CRL for its revocation data. What happens to the accuracy of OCSP responses if the CRL becomes stale — specifically, what response would a relying party receive for a certificate that was revoked after the last CRL was published?**
 
 ```
-(your answer here)
+If the CRL becomes stale, the OCSP responder would continue returning a Good response for any
+certificate revoked after the last CRL publication. This is because the Online Responder reads its
+revocation data from the CRL — if that CRL has not been updated to include the new revocation, the
+responder has no record of it and cannot return a Revoked status. The relying party would receive a
+Good response even though the certificate is no longer valid.
 ```
 
 **4. If the OCSP responder on PKI-SRV01 became unreachable, and a relying party was configured for hard-fail revocation checking, what would happen to all certificate verifications in your environment — including valid certificates?**
 
 ```
-(your answer here)
+If the OCSP responder became unreachable and the relying party was configured for hard-fail
+revocation checking, all certificate verifications in the environment would fail — including valid
+certificates. Hard-fail means the relying party treats an inability to obtain revocation status as
+a verification failure. Since no OCSP response could be retrieved, every certificate validation
+attempt would be rejected regardless of whether the certificate was actually revoked
 ```
 
 **5. Compare the two test results from Part D: Good for the valid certificate and Revoked for the Lab 01 certificate. What did the OCSP response tell the relying party in real time that a stale CRL could not?**
 
 ```
-(your answer here)
+The Good response for the valid certificate told the relying party in real time that the
+certificate had not been revoked as of that moment, based on the most recently published CRL the
+Online Responder had loaded. The Revoked response for the revoked certificate confirmed the
+specific revocation reason and that the certificate should not be trusted. A stale CRL could not
+have provided this in real time — if the revocation had occurred after the last CRL publication,
+a relying party relying solely on a cached CRL would have no way of knowing the certificate had
+been revoked until the next CRL was downloaded.
 ```
 
 ---
 
 ## Submission Checklist
 
-- [ ] Logged in as CORP\pki.admin (not a local account)
-- [ ] Online Responder role service installed — OCSPSvc status confirmed Running
-- [ ] Revocation configuration created for CVI Issuing CA 1
-- [ ] Online Responder snap-in shows green status
-- [ ] OCSP signing certificate located in the Personal store
-- [ ] OCSP Signing EKU (1.3.6.1.5.5.7.3.9) confirmed present
-- [ ] id-pkix-ocsp-nocheck extension (1.3.6.1.5.5.7.48.1.5) confirmed present
-- [ ] OCSP URL identified from AIA extension
-- [ ] certutil -URL for valid certificate: Good response documented
-- [ ] certutil -URL for revoked certificate (from Lab 01): Revoked response documented
-- [ ] certutil -verify output for both certificates included
-- [ ] AIA extension entries (CA Issuers URL + OCSP URL) identified and explained
-- [ ] All five lab report questions answered in complete sentences
-- [ ] Lab file committed to `labs/week-12/lab-02-ocsp-responder.md`
+- [x] Logged in as CORP\pki.admin (not a local account)
+- [x] Online Responder role service installed — OCSPSvc status confirmed Running
+- [x] Revocation configuration created for CVI Issuing CA 1
+- [x] Online Responder snap-in shows green status
+- [x] OCSP signing certificate located in the Personal store
+- [x] OCSP Signing EKU (1.3.6.1.5.5.7.3.9) confirmed present
+- [x] id-pkix-ocsp-nocheck extension (1.3.6.1.5.5.7.48.1.5) confirmed present
+- [x] OCSP URL identified from AIA extension
+- [x] certutil -URL for valid certificate: Good response documented
+- [x] certutil -URL for revoked certificate (from Lab 01): Revoked response documented
+- [x] certutil -verify output for both certificates included
+- [x] AIA extension entries (CA Issuers URL + OCSP URL) identified and explained
+- [x] All five lab report questions answered in complete sentences
+- [x] Lab file committed to `labs/week-12/lab-02-ocsp-responder.md`
