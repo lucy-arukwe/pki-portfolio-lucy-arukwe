@@ -511,18 +511,14 @@ certificate, creating an infinite circular dependency.
 **3. Your Online Responder reads the CA's CRL for its revocation data. What happens to the accuracy of OCSP responses if the CRL becomes stale — specifically, what response would a relying party receive for a certificate that was revoked after the last CRL was published?**
 
 ```
-If the CRL becomes stale, the OCSP responder would continue returning a Good response for any
-certificate revoked after the last CRL publication. This is because the Online Responder reads its
-revocation data from the CRL — if that CRL has not been updated to include the new revocation, the
-responder has no record of it and cannot return a Revoked status. The relying party would receive a
-Good response even though the certificate is no longer valid.
+If the CRL becomes stale, the Online Responder will continue using the old revocation information it already has. If a certificate was revoked after the last CRL was published, the responder would not know about it and could return a Good response instead of Revoked. This means a certificate that should no longer be trusted could still appear valid until a new CRL is published.
 ```
 
 **4. If the OCSP responder on PKI-SRV01 became unreachable, and a relying party was configured for hard-fail revocation checking, what would happen to all certificate verifications in your environment — including valid certificates?**
 
 ```
 If the OCSP responder became unreachable and the relying party was configured for hard-fail
-revocation checking, all certificate verifications in the environment would fail — including valid
+revocation checking, all certificate verifications in the environment would fail, including valid
 certificates. Hard-fail means the relying party treats an inability to obtain revocation status as
 a verification failure. Since no OCSP response could be retrieved, every certificate validation
 attempt would be rejected regardless of whether the certificate was actually revoked
@@ -531,13 +527,7 @@ attempt would be rejected regardless of whether the certificate was actually rev
 **5. Compare the two test results from Part D: Good for the valid certificate and Revoked for the Lab 01 certificate. What did the OCSP response tell the relying party in real time that a stale CRL could not?**
 
 ```
-The Good response for the valid certificate told the relying party in real time that the
-certificate had not been revoked as of that moment, based on the most recently published CRL the
-Online Responder had loaded. The Revoked response for the revoked certificate confirmed the
-specific revocation reason and that the certificate should not be trusted. A stale CRL could not
-have provided this in real time — if the revocation had occurred after the last CRL publication,
-a relying party relying solely on a cached CRL would have no way of knowing the certificate had
-been revoked until the next CRL was downloaded.
+The OCSP response gave the relying party the current status of each certificate at the time of the request. It showed that the valid certificate was still trusted and that the revoked certificate should no longer be trusted. A stale CRL could not provide that same level of accuracy because it may not contain recent revocation information. If a certificate was revoked after the last CRL was published, a relying party using an old CRL might still think the certificate was valid.
 ```
 
 ---
