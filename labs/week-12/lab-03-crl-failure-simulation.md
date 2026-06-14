@@ -317,8 +317,8 @@ Document your diagnostic process as if you are responding to an operational inci
 1. Based on your observations in Part B, describe the symptom a relying party would encounter:
 
 ```
-During the silent phase of the failure — while the existing CRL was still within its validity
-window — a relying party would experience no visible impact. Certificate verification would
+During the silent phase of the failure, while the existing CRL was still within its validity
+window, a relying party would experience no visible impact. Certificate verification would
 succeed, OCSP responses would return Good, and no errors would be logged. The failure is
 completely invisible until June 18, 2026 at 7:00 AM when the CRL's NextUpdate passes.
 
@@ -347,7 +347,9 @@ no way to confirm current revocation status because no fresh CRL exists.
 **Explain how you determined this:**
 
 ```
-(reference the specific certutil -verify output and error code that led to your conclusion)
+The certutil -verify command completed successfully and showed "Leaf certificate revocation check passed" with no revocation errors. This showed that the certificate was still being trusted even though the CRL publication schedule had been changed.
+
+The reason verification still worked was because the existing CRL had not yet expired. The relying party was able to use that CRL to check the certificate status, so no errors were reported. This indicated soft fail behavior because certificate validation continued to succeed even though the CA would not publish another CRL under the current configuration.
 ```
 
 ### Step 3 — State the Root Cause
@@ -355,7 +357,9 @@ no way to confirm current revocation status because no fresh CRL exists.
 1. Identify the specific root cause of the failure using the evidence you collected:
 
 ```
-(state the root cause precisely: what registry setting was changed, why that caused the CRL to become stale, and why that affected certificate verification or OCSP responses)
+The root cause of the issue was a change to four CA registry settings. CRLPeriodUnits was changed from 1 to 99 and CRLPeriod was changed from Weeks to Years. The same changes were made to the Delta CRL settings.
+
+After CertSvc was restarted, the CA calculated its next CRL publication far into the future and stopped publishing new CRLs on its normal schedule. The CRL that already existed remained valid until its NextUpdate time. Once that time passed, no new CRL would be available for relying parties to download, and the OCSP responder would no longer have current revocation information to work with.
 ```
 
 ### Step 4 — Describe the Production Detection Gap
@@ -363,7 +367,9 @@ no way to confirm current revocation status because no fresh CRL exists.
 1. Explain what in this scenario would have alerted you to the failure in a production environment — and what would not:
 
 ```
-(consider: would Event 47 have fired? Would monitoring based only on error events have caught this? What proactive check would have detected the stale CRL before a relying party noticed?)
+Event ID 47 (CRL publication failed) would not have appeared in this scenario because the CA never attempted to publish a new CRL. Event 47 is only generated when a CRL publication is attempted and fails. Since the publication schedule was changed to 99 years, the CA believed it did not need to publish another CRL for a very long time, so no failure event was created.
+
+This means that monitoring only for Event ID 47 would not have detected the problem. A better approach would be to monitor the CRL's NextUpdate value and create an alert before the CRL expires. Monitoring the CRL publication settings would also help identify unexpected changes before they affect certificate validation.
 ```
 
 ---
@@ -528,7 +534,7 @@ This is the primary deliverable for Lab 03. Write it as you would for a real PKI
 ```
 On June 10, 2026, a simulated CRL publication failure was introduced on PKI-SRV01 by modifying four CA registry values using certutil. The CRLPeriodUnits value was changed from 1 to 99 and CRLPeriod was changed from Weeks to Years. The same change was applied to the Delta CRL settings. CertSvc was restarted at approximately 8:00 PM to apply the changes. From that point forward, the CA calculated its next scheduled CRL publication as 99 years in the future and stopped generating new CRLs entirely.
 
-The failure entered a silent phase immediately after the restart. The existing CRL on disk, published earlier that day at 6:40 PM with a NextUpdate of June 18, 2026 at 7:00 AM, remained valid and continued to be served to relying parties. Certificate verification continued to succeed and the OCSP responder continued to return Good responses because both relied on the still-valid cached CRL. No error events were generated because the CA never attempted a publication — it simply believed none was due for 99 years.
+The failure entered a silent phase immediately after the restart. The existing CRL on disk, published earlier that day at 6:40 PM with a NextUpdate of June 18, 2026 at 7:00 AM, remained valid and continued to be served to relying parties. Certificate verification continued to succeed and the OCSP responder continued to return Good responses because both relied on the still-valid cached CRL. No error events were generated because the CA never attempted a publication, it simply believed none was due for 99 years.
 
 The full impact of the failure would have become observable on June 18, 2026 at 7:00 AM when the CRL's NextUpdate passed with no new CRL published.
 ```
@@ -626,9 +632,9 @@ the CA never attempted to publish at all because the schedule was set to 99 year
 Event 47 was ever generated. A monitoring system that only watched for Event 47 would see
 nothing wrong right up until the moment the CRL expired and relying parties started failing.
 
-To detect this proactively, monitoring should inspect the CRL's NextUpdate value directly
-and raise an alert when it falls below a defined threshold — for example, alerting when
-fewer than 3 days remain before the CRL expires. A separate check should also monitor the
+In a production environment, I would monitor the CRL NextUpdate value and create an alert when the CRL is getting close to expiring. I would also monitor the CRL publication settings so that unexpected changes are detected quickly.
+
+Watching only for Event ID 47 is not enough because that event only appears when a CRL publication attempt fails. In this lab, the CA never attempted another publication, so there was no Event 47 even though the configuration was broken. A separate check should also monitor the
 CA registry values for CRLPeriod and CRLPeriodUnits and alert on any unexpected change.
 Together these two checks would catch both a broken schedule and a CRL approaching expiry,
 giving the operations team time to respond before any relying party was affected.
@@ -637,15 +643,15 @@ giving the operations team time to respond before any relying party was affected
 **2. You observed whether your environment was hard-fail or soft-fail. What is the security implication of soft-fail behavior specifically for a key compromise scenario — where an attacker holds a revoked certificate and the stale CRL still shows it as good?**
 
 ```
-In this lab the environment exhibited soft-fail behavior — certificate verification succeeded
+In this lab the environment exhibited soft-fail behavior, certificate verification succeeded
 even after the CRL publication schedule was broken. In a key compromise scenario, this means
 an attacker holding a certificate that has been revoked due to key compromise could continue
 to use that certificate without any relying party detecting a problem, for as long as the
 stale CRL remains within its validity window.
 
 The CA administrator may have already revoked the certificate and published a new CRL the
-moment the compromise was discovered. But if the CRL publication schedule then broke — or
-if a relying party was using a cached copy of the old CRL — the attacker's certificate
+moment the compromise was discovered. But if the CRL publication schedule then broke, or
+if a relying party was using a cached copy of the old CRL, the attacker's certificate
 would still appear as Good. In a soft-fail environment there is no safety net: the system
 assumes the certificate is valid when it cannot confirm otherwise, which is the worst
 possible outcome in a compromise scenario where speed of revocation is critical.
@@ -658,7 +664,7 @@ The Online Responder does not maintain its own independent database of revoked c
 It reads the CA's published CRL and uses that as the source of truth for every OCSP response
 it issues. When the CRL is fresh, the OCSP responder accurately reflects the current
 revocation state. When the CRL becomes stale or expires, the OCSP responder loses its
-data source and can no longer confirm revocation status — at that point it returns Unknown
+data source and can no longer confirm revocation status, at that point it returns Unknown
 rather than Good or Revoked.
 
 This means OCSP is only as accurate as the CRL it reads from. An environment that deploys
