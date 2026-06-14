@@ -17,6 +17,7 @@
 | Issued Certificates | No certificates had been issued yet at this stage of the lab |
 | Pending Requests | The folder was empty with no pending certificate requests |
 | Certificate Templates | The following certificate templates are currently published to CVI Issuing CA 1 and available for issuance: Administrator, Authenticated Session, Basic EFS, CA Exchange, CEP Encryption, Code Signing, Computer, Cross Certification Authority, Directory Email Replication, Domain Controller, Domain Controller Authentication, EFS Recovery Agent, Enrollment Agent, Enrollment Agent(Computer), Exchange Enrollment Agent (Offline request), Exchange Signature Only, Exchange User, IPSec, IPSec (Offline request), Kerberos Authentication, Key Recovery Agent, OCSP Response Signing, RAS and IAS Server, Root Certification Authority, Router (Offline request), Smartcard Logon, Smartcard User, Subordinate Certification Authority, Trust List Signing, User, Web Server, Workstation |
+| Failed Request | No failed certificate requests were present. The folder was empty at this stage of the lab.
 
 ### CA Properties — Key Settings
 
@@ -236,13 +237,15 @@ the Root CA private key were stolen, the entire PKI environment would no longer 
 
 Examples of Template Purposes
 
-• Web Server: Designed to issue certificates used for HTTPS and TLS encryption on websites and servers. These certificates help secure communication between clients and servers.
+Certificate templates define the rules and settings for issuing different types of certificates. 
 
-• User: Designed to issue certificates for user authentication, secure email, encryption, and digital signatures.
+Web Server templates are designed to issue certificates used for HTTPS and TLS encryption on websites and servers, helping secure communication between clients and servers. 
 
-• Computer: Used to issue certificates to domain computers for machine authentication and secure communication within the network.
+User templates issue certificates for user authentication, secure email, encryption, and digital signatures.
 
-• Subordinate Certification Authority: Used to issue certificates to subordinate or issuing CAs that operate under a trusted Root CA in the PKI hierarchy.
+Computer templates are used to issue certificates to domain computers for machine authentication and secure communication within the network. 
+
+Subordinate Certification Authority templates issue certificates to subordinate or issuing CAs that operate under a trusted Root CA in the PKI hierarchy.
 
 ### 4. Active Directory Structure
 
