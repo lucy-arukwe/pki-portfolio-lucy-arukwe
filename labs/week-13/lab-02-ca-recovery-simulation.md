@@ -41,11 +41,17 @@ Get-ChildItem C:\CABackup -Recurse | Select-Object FullName, Length, LastWriteTi
 **Expected:** .p12 file and DataBase folder with .edb file from Lab 01.
 
 ```
-(paste output here)
+FullName                                  Length  LastWriteTime
+--------                                  ------  -------------
+C:\CABackup\DataBase                              6/18/2026 5:21:30 PM
+C:\CABackup\CVI Issuing CA 1.p12          4631    6/18/2026 5:21:30 PM
+C:\CABackup\DataBase\certbkxp.dat         398     6/18/2026 5:21:30 PM
+C:\CABackup\DataBase\CVI Issuing CA 1.edb 1052672 6/18/2026 5:21:30 PM
+C:\CABackup\DataBase\edb00003.log         1048576 6/18/2026 5:21:30 PM
 ```
 
 **Lab 01 backup files are present in C:\CABackup:**
-- [ ] Yes — proceed to Part A
+- [x] Yes — proceed to Part A
 - [ ] No — Lab 01 must be completed before this lab can proceed
 
 ### Step 2 — Confirm CA Is Fully Operational
@@ -56,11 +62,17 @@ certutil -CRL
 ```
 
 ```
-(paste both outputs here)
+PS C:\Windows\system32> certutil -ping
+Connecting to PKI-SRV01.corp.cvilab.local\CVI Issuing CA 1 ...
+Server "CVI Issuing CA 1" ICertRequest2 interface is alive (16ms)
+CertUtil: -ping command completed successfully.
+
+PS C:\Windows\system32> certutil -CRL
+CertUtil: -CRL command completed successfully.
 ```
 
 **CA is operational before starting the simulation:**
-- [ ] Yes — proceed to Part A
+- [x] Yes — proceed to Part A
 - [ ] No — resolve any CA issues before continuing
 
 ---
@@ -85,7 +97,24 @@ certutil -view -restrict "Disposition=20" -out "RequestID,SerialNumber,CommonNam
 ```
 
 ```
-(paste all three outputs here)
+PS C:\Windows\system32> certutil -CRL
+CertUtil: -CRL command completed successfully.
+
+PS C:\Windows\system32> Get-ChildItem Cert:\LocalMachine\My | Where-Object {$_.Subject -like "*CVI Issuing*"} | Select-Object Thumbprint, Subject
+
+Thumbprint                               Subject
+----------                               -------
+5137A597DE2C3085EC5816C7F11EDC18CFCDBAF8 CN=CVI Issuing CA 1, DC=corp, DC=cvilab, DC=local
+
+PS C:\Windows\system32> certutil -view -restrict "Disposition=20" -out "RequestID,SerialNumber,CommonName,NotAfter" | Select-Object -Last 10
+  Certificate Expiration Date: 7/2/2026 7:36 PM
+Maximum Row Index: 9
+9 Rows
+  36 Row Properties, Total Size = 1190, Max Size = 76, Ave Size = 33
+   0 Request Attributes, Total Size = 0, Max Size = 0, Ave Size = 0
+   0 Certificate Extensions, Total Size = 0, Max Size = 0, Ave Size = 0
+  36 Total Fields, Total Size = 1190, Max Size = 76, Ave Size = 33
+CertUtil: -view command completed successfully.
 ```
 
 **Pre-snapshot CA state — record for comparison after recovery:**
@@ -108,7 +137,7 @@ Stop-Computer -Force
 Wait for the VM to fully power off before proceeding.
 
 **PKI-SRV01 has powered off completely:**
-- [ ] Yes
+- [x] Yes
 - [ ] No — describe:
 
 ### Step 3 — Take the Snapshot
@@ -150,11 +179,11 @@ On your **host machine** (not inside the VM). Follow the instructions for your h
 ```
 
 **Hypervisor:**
-- [ ] VirtualBox
+- [x] VirtualBox
 - [ ] UTM
 
 **Snapshot taken successfully:**
-- [ ] Yes — snapshot appears in the snapshot list for PKI-SRV01
+- [x] Yes — snapshot appears in the snapshot list for PKI-SRV01
 - [ ] No — describe the issue:
 
 ### Step 4 — Start PKI-SRV01
@@ -167,7 +196,10 @@ certutil -ping
 ```
 
 ```
-(paste certutil -ping output here)
+PS C:\Windows\system32> certutil -ping
+Connecting to PKI-SRV01.corp.cvilab.local\CVI Issuing CA 1 ...
+Server "CVI Issuing CA 1" ICertRequest2 interface is alive (16ms)
+CertUtil: -ping command completed successfully.
 ```
 
 ---
@@ -223,7 +255,7 @@ Start-Service CertSvc
 ---
 
 **Which option did you choose?**
-- [ ] Option 1 — CA database files deleted
+- [x] Option 1 — CA database files deleted
 - [ ] Option 2 — CertLog folder renamed
 
 **Record the failure state:**
@@ -238,23 +270,43 @@ Get-WinEvent -LogName Application -Source "CertificationAuthority" -MaxEvents 5 
 ```
 
 ```
-(paste Get-Service output here)
+PS C:\Windows\system32> Get-Service CertSvc
+
+Status   Name               DisplayName
+------   ----               -----------
+Stopped  CertSvc            Active Directory Certificate Services
 ```
 
 ```
-(paste event log output here)
+PS C:\Windows\system32> Get-WinEvent -LogName Application -MaxEvents 50 | Where-Object {$_.Message -like "*CertSvc*" -or $_.Message -like "*certificate*"} | Select-Object TimeCreated, Id, ProviderName, Message | Format-List
+
+
+TimeCreated  : 6/18/2026 8:23:52 PM
+Id           : 17
+ProviderName : Microsoft-Windows-CertificationAuthority
+Message      : Active Directory Certificate Services did not start: Unable to initialize the database connection
+               for CVI Issuing CA 1.  File not found 0xc8000713 (ESE: -1811 JET_errFileNotFound).
 ```
+
 
 **Document the failure state in your own words:**
 
 ```
 CA service status:
-Event log errors observed (Event IDs and messages):
-What you believe is causing the CA failure:
+Event log errors observed (Event IDs and messages): Event ID 17, Provider: Microsoft-Windows-CertificationAuthority — 
+"Active Directory Certificate Services did not start: Unable to initialize 
+the database connection for CVI Issuing CA 1. File not found 0xc8000713 
+(ESE: -1811 JET_errFileNotFound)."
+
+What you believe is causing the CA failure: The CA database files (.edb and transaction logs) were deleted from 
+C:\Windows\System32\CertLog\. When CertSvc attempted to start, it could not 
+locate the database and failed with a JET_errFileNotFound error (0xc8000713). 
+Without the database, the CA has no record of issued certificates and cannot 
+perform any operations.
 ```
 
 **CA service is in a failed state and the failure is documented:**
-- [ ] Yes — proceed to Part C
+- [x] Yes — proceed to Part C
 - [ ] No — CA service started successfully (choose a more destructive option above)
 
 ---
@@ -277,7 +329,7 @@ If the VM is unresponsive, force power off from your hypervisor:
 - **UTM:** Right-click the VM in the sidebar → Stop, or close the VM window
 
 **PKI-SRV01 is powered off:**
-- [ ] Yes
+- [x] Yes
 - [ ] Forced power off used — describe:
 
 ### Step 2 — Restore the Snapshot
@@ -315,7 +367,7 @@ On your **host machine**. Follow the instructions for your hypervisor.
 ---
 
 **Snapshot restore completed without errors:**
-- [ ] Yes
+- [x] Yes
 - [ ] No — describe the error:
 
 ### Step 3 — Start PKI-SRV01 and Log In
@@ -323,7 +375,7 @@ On your **host machine**. Follow the instructions for your hypervisor.
 Start the VM and log in as CORP\pki.admin.
 
 **VM started and login successful:**
-- [ ] Yes
+- [x] Yes
 - [ ] No — describe:
 
 ---
@@ -341,11 +393,13 @@ Get-Service CertSvc
 **Expected:** Status = Running
 
 ```
-(paste output here)
+Status   Name               DisplayName
+------   ----               -----------
+Running  CertSvc            Active Directory Certificate Services
 ```
 
 **CA service is running:**
-- [ ] Yes
+- [x] Yes
 - [ ] No — attempt Start-Service CertSvc and document result:
 
 ### Step 2 — Confirm CA Responds
@@ -357,7 +411,10 @@ certutil -ping
 **Expected:** "Server 'CVI Issuing CA 1' ICertRequest2 interface is alive"
 
 ```
-(paste output here)
+PS C:\Windows\system32> certutil -ping
+Connecting to PKI-SRV01.corp.cvilab.local\CVI Issuing CA 1 ...
+Server "CVI Issuing CA 1" ICertRequest2 interface is alive (15ms)
+CertUtil: -ping command completed successfully.
 ```
 
 ### Step 3 — Publish a New CRL
@@ -369,13 +426,13 @@ certutil -CRL
 **Expected:** "CRL published successfully. CertUtil: -CRL command completed successfully."
 
 ```
-(paste output here)
+CertUtil: -CRL command completed successfully.
 ```
 
 > **If certutil -CRL fails with "Access is denied":** Confirm you are running from an elevated prompt as CORP\pki.admin.
 
 **CRL published successfully:**
-- [ ] Yes
+- [x] Yes
 - [ ] No — describe:
 
 ### Step 4 — Confirm CRL Is Accessible at the Distribution Point
@@ -391,7 +448,7 @@ Alternatively, navigate to the CDP URL in a browser on PKI-SRV01:
 `http://pki-srv01.corp.cvilab.local/CertEnroll/`
 
 **CRL is accessible at the HTTP distribution point:**
-- [ ] Yes
+- [x] Yes
 - [ ] No — describe:
 
 ### Step 5 — Verify Database Is Intact
@@ -404,11 +461,13 @@ certutil -view -restrict "Disposition=20" -out "RequestID,CommonName" | Measure-
 ```
 
 ```
-(paste output here)
+Lines Words Characters Property
+----- ----- ---------- --------
+   39
 ```
 
 **Issued certificate count matches what you recorded before the failure:**
-- [ ] Yes
+- [x] Yes
 - [ ] Approximately — slight difference, explain:
 - [ ] No — describe:
 
@@ -421,11 +480,11 @@ Get-WinEvent -LogName Application -Source "CertificationAuthority" -MaxEvents 10
 ```
 
 ```
-(paste output — or "No errors found")
+ "No errors found"
 ```
 
 **Event log shows no errors from CertificationAuthority after recovery:**
-- [ ] Yes — no errors
+- [x] Yes — no errors
 - [ ] Errors found — document and explain:
 
 ### Step 7 — Record Recovery Completion
@@ -433,13 +492,13 @@ Get-WinEvent -LogName Application -Source "CertificationAuthority" -MaxEvents 10
 **Recovery completed at (date and time):**
 
 ```
-(record here)
+12:38 AM, June 19, 2026
 ```
 
 **Time from snapshot restore initiation to CA fully operational:**
 
 ```
-(estimate in minutes)
+5–10 minutes
 ```
 
 ---
@@ -451,31 +510,31 @@ Answer all questions in complete sentences.
 **1. Describe the failure state you simulated in Part B. What did Get-Service CertSvc show, and what Event IDs appeared in the event log? What would a real-world CA administrator see if they encountered this failure?**
 
 ```
-(your answer here)
+The failure was simulated by stopping the CertSvc service and deleting all .edb and .log files from C:\Windows\System32\CertLog\. When CertSvc was restarted, it failed immediately with a StartServiceFailed error. Get-Service CertSvc showed a Stopped status. The Application event log recorded Event ID 17 from Microsoft-Windows-CertificationAuthority: "Active Directory Certificate Services did not start: Unable to initialize the database connection for CVI Issuing CA 1. File not found 0xc8000713 (ESE: -1811 JET_errFileNotFound)." A real-world CA administrator encountering this failure would see the CA service listed as Stopped in services.msc, certificate enrollment requests failing across the environment, and CRL publication halted — causing dependent services to begin rejecting certificates whose revocation status could not be confirmed.
 ```
 
 **2. Walk through the snapshot restore procedure step by step. What did VirtualBox do during the restore — and how did the restored VM state compare to the failure state you left it in?**
 
 ```
-(your answer here)
+With PKI-SRV01 powered off, the VirtualBox snapshot Week13-Lab02-PreFailure-2026-06-18 was selected in the Snapshots tab of VirtualBox Manager. Clicking Restore brought up a confirmation dialog asking whether to preserve the current (failed) machine state before restoring — that option was left unchecked since the failed state had no value. After clicking Restore, VirtualBox reverted the entire VM disk and configuration to the state captured at snapshot time, approximately 21 minutes earlier. The "Current State (changed)" label in the snapshot list became "Current State" with no changed indicator, confirming the restore completed. When PKI-SRV01 was started after the restore, it booted into the pre-failure state — the CertLog database files were intact, the CA service started automatically, and no trace of the destructive operation remained.
 ```
 
 **3. Walk through the post-recovery verification checklist. Which step confirmed that the CA was fully operational — not just running, but functional? Explain what each verification step tests and why it is not sufficient to just check that the CA service is running.**
 
 ```
-(your answer here)
+The verification checklist confirmed recovery at multiple layers. Get-Service CertSvc confirmed the service was in a Running state, but that alone only proves Windows started the process — not that the CA is functional. certutil -ping went further by confirming the CA's RPC interface was responding to requests, meaning it could actually communicate with clients. certutil -CRL verified that the CA's private key was functional by successfully signing and publishing a new CRL — this is the step that truly confirms cryptographic operability, since a CA with a missing or inaccessible key would fail here. The certutil -view line count of 39 matched the pre-failure baseline, confirming the database was restored intact with no issuance history lost. Finally, the event log check confirmed no new CA errors appeared after recovery, ruling out any silent failures during startup.
 ```
 
 **4. The snapshot you restored from was taken immediately after Lab 01. If this were a production environment where the last snapshot was taken 72 hours ago, what operational data would be lost in this recovery — and why does that data loss matter to the organization?**
 
 ```
-(your answer here)
+Any certificates issued in the 72 hours between the snapshot and the failure would not exist in the restored CA database. The CA would have no record of those certificates — it could not revoke them, track their expiration, or verify their serial numbers. Those certificates would still be installed on the endpoints that received them and would continue to be trusted by relying parties until they expired naturally, since the CA's own revocation records for them are gone. For an organization, this means losing the ability to respond to a compromise involving any of those certificates. If a private key were stolen during that window and the certificate needed to be revoked immediately, the CA would have no record of the certificate to revoke. The organization would have no clean way to remove trust in those certificates without revoking the entire issuing CA — a drastic action that would invalidate every certificate it had ever issued.
 ```
 
 **5. Compare snapshot restore to file-based restore (which you will perform in Lab 03). Based on what you experienced today, what is the primary advantage of snapshot restore — and in what failure scenario would snapshot restore NOT be available as an option?**
 
 ```
-(your answer here)
+The primary advantage of snapshot restore is speed and completeness. The entire VM state — OS, configuration, database, registry, certificate stores — is returned to a known good point in a single operation that takes under a minute, with no manual reconstruction required. File-based restore, by contrast, requires reinstalling the CA role, restoring the database and private key individually, reconfiguring CA settings, and re-registering in Active Directory — a multi-step process with more opportunity for error. Snapshot restore would not be available as an option in two scenarios: first, if the failure is at the hypervisor or hardware level rather than the OS or application level — a failed host machine cannot restore its own snapshots. Second, if snapshots were not being taken regularly or the most recent snapshot predates the failure by an unacceptable margin, a file-based restore from a more recent certutil backup may actually represent less data loss than reverting to an old snapshot.
 ```
 
 ---
