@@ -1,8 +1,8 @@
 # Lab 02: CA Recovery Simulation — Snapshot Restore
 
-**Student Name:** Lucy Arukwe
+**Student Name:**  Lucy Arukwe
 
-**Date Completed:** 18 June, 2026
+**Date Completed:**  18 June, 2026
 
 **Phase:** 2 | **Week:** 13  
 
