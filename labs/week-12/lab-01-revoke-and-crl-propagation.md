@@ -1,8 +1,11 @@
 # Lab 01: Revoke a Certificate and Observe CRL Propagation
 
-**Student Name:**  Lucy Arukwe
+**Student Name:** Lucy Arukwe
+
 **Date Completed:** 30/05/2026 
-**Phase:** 2 | **Week:** 12  
+
+**Phase:** 2 |**Week:** 12  
+
 **Submission Path:** `labs/week-12/lab-01-revoke-and-crl-propagation.md`
 
 ---
