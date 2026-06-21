@@ -1,8 +1,11 @@
 # Lab 01: Full CA Backup — Database, Keys, and System State
 
-**Student Name:**  Lucy Arukwe
-**Date Completed:** 18 June, 2026
+**Student Name:**  Lucy Arukwe 
+
+**Date Completed:** 18 June, 2026 
+
 **Phase:** 2 | **Week:** 13
+
 **Submission Path:** `labs/week-13/lab-01-ca-backup.md`
 
 ---
