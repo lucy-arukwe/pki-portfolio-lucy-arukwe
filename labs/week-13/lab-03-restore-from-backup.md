@@ -1,8 +1,11 @@
 # Lab 03: Restore from Backup Files *(Stretch)*
 
-**Student Name:**  
-**Date Completed:**  
+**Student Name:**  Lucy Arukwe
+
+**Date Completed:**  18 June, 2026
+
 **Phase:** 2 | **Week:** 13  
+
 **Submission Path:** `labs/week-13/lab-03-restore-from-backup.md`
 
 ---
@@ -481,67 +484,57 @@ Answer all questions in complete sentences.
 
 ```
 The file-based restore required two certutil commands executed in a specific order. The first was certutil -restorekey -p <password> "C:\CABackup\CVI Issuing CA 1.p12", which imported the CA's private key and certificate from the PKCS#12 backup file back into the Windows local machine certificate store.
-Without this step, the CA service has no signing material — it cannot issue certificates, sign CRLs, or authenticate itself to Active Directory. The second command was certutil -restoredb "C:\CABackup", which copied the CA database files from the backup folder back into C:\Windows\System32\CertLog\, restoring
-the full issuance history. The order matters because the CA service validation at startup checks for both the private key and the database simultaneously. Restoring the database first without the private key would result in the CA service failing to start — it would find the database but have no key to associate with it.
+Without this step, the CA service has no signing material, it cannot issue certificates, sign CRLs, or authenticate itself to Active Directory. The second command was certutil -restoredb "C:\CABackup", which copied the CA database files from the backup folder back into C:\Windows\System32\CertLog\, restoring
+the full issuance history. The order matters because when the CA starts, it expects to find both its database and its private key. If one is missing, the CA cannot function properly. Restoring the database first without the private key would result in the CA service failing to start, it would find the database but have no key to associate with it.
 Restoring the key first ensures that when the database is restored and the service starts, all components are present and consistent.
 ```
 
 **2. In Part B, you restored the CA private key using certutil -restorekey. What would have happened if you had restored the CA database first (certutil -restoredb) without restoring the private key first — specifically, would the CA service have started? Why or why not?**
 
 ```
-The CA service would not have started successfully, or if it appeared to start, it would have been non-functional — exactly as observed in the failure simulation in Part A. The CA service requires both the database and the private key to initialize. The database tells the CA what
-certificates it has issued, but the private key is what allows it to cryptographically sign new certificates and CRLs. Without the private key in the local machine certificate store, the CA service cannot bind to its own certificate at startup. The event log would show an error indicating the
-CA certificate could not be found or the private key was inaccessible, and certutil -ping would fail with an RPC unavailable error. The restore must always follow the sequence: key first, database second, then restart the service.
+The CA service would not have started successfully, or if it appeared to start, it would have been non-functional, exactly as observed in the failure simulation in Part A. The CA service requires both the database and the private key to initialize. The database tells the CA what certificates it has issued, but the private key is what allows it to cryptographically sign new certificates and CRLs. Without the private key in the local machine certificate store, the CA service cannot bind to its own certificate at startup. The event log would show an error indicating the CA certificate could not be found or the private key was inaccessible, and certutil -ping would fail with an RPC unavailable error. The restore must always follow the sequence: key first, database second, then restart the service.
 ```
 
 **3. Compare your experience with Lab 02 (snapshot restore) and Lab 03 (file-based restore). Which was faster? Which required more steps? Which required the backup password? Which procedure would apply if the CA server hardware had been destroyed and you were restoring to a new machine?**
 
 ```
-Snapshot restore in Lab 02 was significantly faster — the entire recovery took approximately 5–10 minutes and required only a single operation in VirtualBox with no commands to run inside the VM. File-based restore in Lab 03 took approximately 15–20 minutes and required multiple sequential
-steps: stopping the service, running certutil -restorekey, clearing the CertLog directory, running certutil -restoredb, restarting the service, and running through the full verification checklist. Only the file-based restore required the backup password — snapshot restore has no password requirement since
-it reverts the entire VM state directly. If the CA server hardware were destroyed and a new machine were needed, only the file-based restore would apply. Snapshots are tied to the hypervisor and the specific VM — they cannot be transferred to new hardware. The file-based restore procedure works on any Windows
-Server with the AD CS role installed, making it the only viable option for hardware replacement scenarios.
+Snapshot restore in Lab 02 was significantly faster the entire recovery took approximately 5–10 minutes and required only a single operation in VirtualBox with no commands to run inside the VM. File-based restore in Lab 03 took approximately 15–20 minutes and required multiple sequential steps: stopping the service, running certutil -restorekey, clearing the CertLog directory, running certutil -restoredb, restarting the service, and running through the full verification checklist. Only the file-based restore required the backup password, snapshot restore has no password requirement since it reverts the entire VM state directly. If the CA server hardware were destroyed and a new machine were needed, only the file-based restore would apply. Snapshots are tied to the hypervisor and the specific VM, they cannot be transferred to new hardware. The file-based restore procedure works on any Windows Server with the AD CS role installed, making it the only viable option for hardware replacement scenarios.
 ```
 
 **4. Explain the "environment mismatch" failure mode described in Lesson 3. What would cause certutil -restoredb to succeed but the CA service to fail to start? What would the event log show, and how would you resolve it?**
 
 ```
-An environment mismatch occurs when the CA database is restored successfully but the configuration of the Windows environment does not match what the database expects. The most common cause is restoring a database to a machine where the CA was reinstalled with a slightly different configuration — a different CA name,
-a different key container name, or a different cryptographic provider than what was used when the backup was taken. In this situation, certutil -restoredb completes without errors because it is only copying files, not validating them against the current CA configuration. The CA service then fails to start because when it reads the database,
-it finds records that reference a CA name or key container that does not match what is currently registered. The event log would show Event ID 100 with a message indicating a CA name mismatch or that the CA certificate could not be found. The resolution depends on the cause: if the CA name is wrong, the AD CS role must be reinstalled with the
-correct name before restoring; if the key container is mismatched, certutil -restorekey must be re-run to ensure the key is in the expected container. This is precisely why the system state backup — which captures the CA's registry configuration — is so valuable: it eliminates environment mismatch by restoring the configuration alongside the database.
+An environment mismatch occurs when the CA database is restored successfully but the configuration of the Windows environment does not match what the database expects. The most common cause is restoring a database to a machine where the CA was reinstalled with a slightly different configuration, a different CA name, a different key container name, or a different cryptographic provider than what was used when the backup was taken. In this situation, certutil -restoredb completes without errors because it is only copying files, not validating them against the current CA configuration. The CA service then fails to start because when it reads the database,
+it finds records that reference a CA name or key container that does not match what is currently registered. The event log would show Event ID 100 with a message indicating a CA name mismatch or that the CA certificate could not be found. The resolution depends on the cause: if the CA name is wrong, the AD CS role must be reinstalled with the correct name before restoring; if the key container is mismatched, certutil -restorekey must be re-run to ensure the key is in the expected container. This is precisely why the system state backup which captures the CA's registry configuration is so valuable: it eliminates environment mismatch by restoring the configuration alongside the database.
 ```
 
 **5. If this were a production CA with an RTO of 4 hours, would the file-based restore procedure you performed today meet that RTO? What factors could cause it to take longer — or shorter — in a production environment compared to your lab?**
 
 ```
-The file-based restore performed today took approximately 15–20 minutes from simulated failure to full operational state, which would comfortably meet a 4-hour RTO in isolation. However, several factors in a production environment could significantly extend that time. If the CA server hardware were destroyed, provisioning and configuring a new Windows Server
-before the restore could even begin might take hours depending on the organization's infrastructure provisioning process. A production CA database is likely far larger than the lab database — the lab .edb file was just over 1 MB, while a production CA that has issued tens of thousands of certificates could have a database many gigabytes in size, making the restore itself
-take considerably longer. Retrieving the backup files from off-site storage or a secure vault, and obtaining the backup password through whatever approval process the organization requires, adds additional time. Factors that could shorten recovery include having a pre-provisioned standby server, storing backups on a network share accessible without physical retrieval, and
-having documented runbook procedures so the recovery operator does not need to look up commands. In a well-prepared environment, the 4-hour RTO is achievable; in an unprepared one, the same procedure could easily exceed it.
-```
+The file-based restore performed today took approximately 15–20 minutes from simulated failure to full operational state, which would comfortably meet a 4-hour RTO in isolation. However, several factors in a production environment could significantly extend that time. If the CA server hardware were destroyed, provisioning and configuring a new Windows Server before the restore could even begin might take hours depending on the organization's infrastructure provisioning process. A production CA database is likely far larger than the lab database the lab .edb file was just over 1 MB, while a production CA that has issued tens of thousands of certificates could have a database many gigabytes in size, making the restore itself take considerably longer. Retrieving the backup files from off-site storage or a secure vault, and obtaining the backup password through whatever approval process the organization requires, adds additional time. Factors that could shorten recovery include having a pre-provisioned standby server, storing backups on a network share accessible without physical retrieval, andhaving documented runbook procedures so the recovery operator does not need to look up commands. In a well-prepared environment, the 4-hour RTO is achievable; in an unprepared one, the same procedure could easily exceed it.
+``` 
 
 ---
 
 ## Submission Checklist
 
-- [ ] Logged in as CORP\pki.admin (not a local account)
-- [ ] Lab 01 backup files confirmed present in C:\CABackup before starting
-- [ ] Backup password available from Lab 01 records
-- [ ] Lab03 pre-restore snapshot taken (VirtualBox or UTM) — snapshot name documented
-- [ ] Failure state simulated — CA database deleted AND CA private key removed from cert store (both operations required)
-- [ ] Failure state documented — CA service status and event log errors recorded
-- [ ] certutil -restorekey run successfully — output included
-- [ ] CA certificate confirmed back in local machine store with HasPrivateKey = True
-- [ ] certutil -restoredb run successfully — output included
-- [ ] CA database files confirmed in C:\Windows\System32\CertLog\ after restore
-- [ ] CA service started without errors — Get-Service CertSvc shows Running
-- [ ] certutil -ping successful after recovery
-- [ ] certutil -CRL successful after recovery
-- [ ] Event log clean (no CA errors after recovery)
-- [ ] Issued certificate history confirmed present in restored database
-- [ ] CRL accessible at HTTP CDP
-- [ ] Recovery timestamp and estimated duration recorded
-- [ ] Snapshot vs. file-based comparison table completed
-- [ ] All five lab report questions answered in complete sentences
-- [ ] Lab file committed to `labs/week-13/lab-03-restore-from-backup.md`
+- [x] Logged in as CORP\pki.admin (not a local account)
+- [x] Lab 01 backup files confirmed present in C:\CABackup before starting
+- [x] Backup password available from Lab 01 records
+- [x] Lab03 pre-restore snapshot taken (VirtualBox or UTM) — snapshot name documented
+- [x] Failure state simulated — CA database deleted AND CA private key removed from cert store (both operations required)
+- [x] Failure state documented — CA service status and event log errors recorded
+- [x] certutil -restorekey run successfully — output included
+- [x] CA certificate confirmed back in local machine store with HasPrivateKey = True
+- [x] certutil -restoredb run successfully — output included
+- [x] CA database files confirmed in C:\Windows\System32\CertLog\ after restore
+- [x] CA service started without errors — Get-Service CertSvc shows Running
+- [x] certutil -ping successful after recovery
+- [x] certutil -CRL successful after recovery
+- [x] Event log clean (no CA errors after recovery)
+- [x] Issued certificate history confirmed present in restored database
+- [x] CRL accessible at HTTP CDP
+- [x] Recovery timestamp and estimated duration recorded
+- [x] Snapshot vs. file-based comparison table completed
+- [x] All five lab report questions answered in complete sentences
+- [x] Lab file committed to `labs/week-13/lab-03-restore-from-backup.md`
