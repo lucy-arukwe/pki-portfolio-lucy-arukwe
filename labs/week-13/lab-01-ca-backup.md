@@ -463,7 +463,7 @@ CertUtil: -CRL command completed successfully.
 
 **CA is operational after backup — all three commands succeeded:**
 - [ ] Yes
-- [ ] No — describe the issue:
+- [x] No — describe the issue:
 
 ---
 
@@ -474,8 +474,7 @@ Answer all questions in complete sentences.
 **1. Describe the three components of a complete CA backup and explain what would happen during recovery if each one were missing.**
 
 ```
-A complete CA backup has three components. The first is the CA database, which contains every certificate the CA has ever issued along with revocation records.
-Without it, a recovered CA would have no history of what it issued — it could not revoke existing certificates or determine which serial numbers had already been used.
+A complete CA backup has three main parts. The first is the CA database, which keeps a record of every certificate the CA has issued and any certificates that have been revoked. Without it, the CA would lose its history and would no longer know which certificates it had issued in the past.
 The second is the CA private key and certificate, packaged as a .p12 file. This is the most critical component: without it, the recovered CA cannot sign anything. It would be
 cryptographically a different CA, and every certificate it had previously issued would become unverifiable against the new key. The third is the Windows system state, which captures the CA's registry configuration,
 local certificate stores, and Active Directory integration objects. Without it, a recovery operator would need to manually reconfigure the CA role, re-register it in Active Directory, and restore
@@ -485,7 +484,7 @@ registry settings by hand — a time-consuming and error-prone process even with
 **2. certutil -backup uses the Volume Shadow Copy Service (VSS). What does this mean operationally — specifically, why is it better than stopping the CA service before copying the database files?**
 
 ```
-VSS creates a point-in-time snapshot of the CA database files while they are still open and in use. This means the CA service keeps running and can continue issuing certificates during the backup — there
+VSS creates a point-in-time snapshot of the CA database files while they are still open and in use. This means the CA service keeps running and can continue issuing certificates during the backup, there
 is no service interruption and no window where certificate requests would be rejected. Stopping the CA service before copying files would achieve a clean copy but at the cost of availability: any automated enrollment
 requests or CRL retrievals attempted during that window would fail. In a production environment where certificates may be issued continuously, even a brief outage can disrupt dependent services. VSS eliminates that tradeoff entirely.
 ```
@@ -493,38 +492,42 @@ requests or CRL retrievals attempted during that window would fail. In a product
 **3. The CA private key backup (.p12 file) is protected by a password you chose. Where did you store the password, and why is storing it in the same folder as the .p12 file a security problem?**
 
 ```
-The password was recorded in a separate lab notes document on the desktop, not inside C:\CABackup. Storing the password in the same location as the .p12 file defeats the purpose of password protection entirely. The password exists to ensure that possession of the backup file alone is not sufficient to extract the private key — an attacker who obtains the .p12 file still cannot use it without the password. If the password is stored alongside the file, anyone who gains access to C:\CABackup gets both simultaneously. The password and the encrypted file must be stored and transmitted through separate channels so that compromising one does not automatically compromise the other.
+The password was recorded in a separate lab notes document on my desktop rather than inside C:\CABackup. Storing the password in the same location as the .p12 file defeats the purpose of password protection entirely. The password exists to ensure that possession of the backup file alone is not sufficient to extract the private key. An attacker who obtains the .p12 file still cannot use it without the password. If the password is stored alongside the file, anyone who gains access to C:\CABackup gets both simultaneously. The password and the encrypted file must be stored and transmitted through separate channels so that compromising one does not automatically compromise the other.
 
 ```
 
 **4. What does the Windows system state backup capture that the certutil -backup does not? If the system state backup had been skipped, what would a recovery operator need to do manually that they would not need to do if the system state backup were present?**
 
 ```
-The certutil backup captures only the CA database and private key — it does not capture how Windows is configured to host and run the CA. The system state backup covers the Windows registry entries that define the CA's configuration, the local certificate stores that hold trusted root and intermediate certificates, and the Active Directory objects that register the CA within the domain. Without the system state backup, a recovery operator would need to reinstall the AD CS role from scratch, manually re-enter all CA configuration settings, re-register the CA in Active Directory, and restore the local certificate store contents by hand. With the system state backup present, those elements are restored automatically, significantly reducing both recovery time and the risk of misconfiguration.
+The certutil backup captures the CA database and private key, but it does not capture how Windows is configured to run the CA. The system state backup includes registry settings, local certificate stores, and Active Directory information related to the CA.
+
+If the system state backup were not available, a recovery operator would need to reinstall AD CS, manually rebuild the CA configuration, restore certificate stores, and re-register the CA in Active Directory. Having the system state backup available makes recovery much faster because most of those settings are restored automatically instead of being recreated by hand.
 ```
 
 **5. Explain the relationship between backup frequency and Recovery Point Objective (RPO). If this CA performs daily backups and the CA fails on day six of a seven-day backup cycle, what is the maximum data loss — and what specifically is lost?**
 
 ```
-RPO defines the maximum acceptable age of data that can be lost in a failure event — in other words, how far back in time a recovery could push the CA. Backup frequency directly determines RPO: a CA that backs up daily has a maximum RPO of 24 hours, while one that backs up weekly could lose up to seven days of data. If this CA backs up daily and fails on day six of a seven-day cycle, the most recent usable backup is approximately five days old. The maximum data loss is five days of CA database records — specifically, any certificates issued during those five days, any revocation actions taken, and any CRL updates generated. Those issued certificates still exist on the endpoints that received them, but the CA's own records of them are gone. A recovery operator would have no way to revoke those certificates through the CA's normal revocation process without manually reconstructing the issuance records.
+RPO describes the maximum amount of data that could be lost if a failure occurs. The more frequently backups are taken, the smaller the potential data loss. A daily backup schedule gives the CA an RPO of about 24 hours.
+
+If the CA performs daily backups and fails on day six, the most recent backup would normally be from day five. In that case, the maximum data loss would be about one day of information. This could include certificates issued since the last backup, certificate revocations that were made, and updates to the CA database. The CA could be restored, but any activity that occurred after the most recent backup would not be present and might need to be reconstructed if possible.
 ```
 
 ---
 
 ## Submission Checklist
 
-- [ ] Logged in as CORP\pki.admin (not a local account) — whoami output included
-- [ ] CA service confirmed running — Get-Service CertSvc output included
-- [ ] CA confirmed responding — certutil -ping output included
-- [ ] C:\CABackup folder created via File Explorer and confirmed empty before running certutil
+- [x] Logged in as CORP\pki.admin (not a local account) — whoami output included
+- [x] CA service confirmed running — Get-Service CertSvc output included
+- [x] CA confirmed responding — certutil -ping output included
+- [x] C:\CABackup folder created via File Explorer and confirmed empty before running certutil
 - [ ] certutil -backup -p run without errors — full output included
-- [ ] .p12 file confirmed present — file name, path, and size recorded
-- [ ] .edb database file confirmed present — file name, path, and size recorded
-- [ ] certutil -dump confirms .p12 is readable with backup password
-- [ ] Private key backup password stored SEPARATELY from C:\CABackup — storage location documented (not the password itself)
-- [ ] Windows Server Backup feature installed
-- [ ] wbadmin system state backup run (or limitation documented with instructor approval)
-- [ ] wbadmin get versions confirms backup completed with today's timestamp
-- [ ] CA confirmed still operational after backup — Get-Service, certutil -ping, certutil -CRL all succeeded
-- [ ] All five lab report questions answered in complete sentences
-- [ ] Lab file committed to `labs/week-13/lab-01-ca-backup.md`
+- [x] .p12 file confirmed present — file name, path, and size recorded
+- [x] .edb database file confirmed present — file name, path, and size recorded
+- [x] certutil -dump confirms .p12 is readable with backup password
+- [x] Private key backup password stored SEPARATELY from C:\CABackup — storage location documented (not the password itself)
+- [x] Windows Server Backup feature installed
+- [x] wbadmin system state backup run (or limitation documented with instructor approval)
+- [x] wbadmin get versions confirms backup completed with today's timestamp
+- [x] CA confirmed still operational after backup — Get-Service, certutil -ping, certutil -CRL all succeeded
+- [x] All five lab report questions answered in complete sentences
+- [x] Lab file committed to `labs/week-13/lab-01-ca-backup.md`
