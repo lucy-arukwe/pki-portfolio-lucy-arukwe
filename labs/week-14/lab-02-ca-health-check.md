@@ -562,20 +562,11 @@ Under CVI Issuing CA 1: CA Certificate green (expires 4/25/2027), AIA Location #
 
 **Summary of any findings requiring follow-up:**
 ```
-1. Four OCSP Response Signing certificates (Request IDs 11, 12, 13, 16) expired on
-   6/14/2026 and still carry Disposition=20 (Issued) in the CA database. These should be
-   revoked to keep the database accurate. In production, expired certificates left as Issued
-   create audit noise and make expiration pipeline queries unreliable.
+1. Four OCSP Response Signing certificates (Request IDs 11, 12, 13, and 16) expired on 6/14/2026 but still    appear in the CA database with a status of Issued (Disposition=20). These certificates should be           revoked so the database accurately reflects their status. In a production environment, leaving expired     certificates marked as issued can make it harder to track active certificates and may lead to confusion    during audits or health checks.
 
-2. DeltaCRL publishing is not configured. The Freshest CRL extension references a Delta CRL
-   URL that returns no file, producing a red indicator in pkiview and a Failed row in certutil
-   -URL. If Delta CRL publishing is not intended, the Freshest CRL extension should be removed
-   from the CA configuration to eliminate the false alarm. If Delta CRLs are desired for
-   environments with frequent revocations, the CA should be configured to publish them.
+2. Delta CRL publishing is not configured in this environment. Because of this, the Freshest CRL extension    points to a Delta CRL file that doesn't exist, which causes the red warning in pkiview and the failed      result in certutil -URL. If Delta CRLs are not going to be used, removing that extension would prevent     unnecessary warnings. If they are needed, then the CA should be configured to publish Delta CRLs           properly.
 
-3. The CAExchange certificate (Request ID 19) expires 7/8/2026 — within 3 days of this
-   health check. AD CS auto-manages CAExchange certificates and should renew it automatically,
-   but this should be verified at the next health check.
+3. The CAExchange certificate (Request ID 19) will expire on 7/8/2026, which is only a few days after this    health check. Although AD CS normally renews this certificate automatically, it should still be checked    during the next scheduled health review to make sure the renewal completed successfully
 ```
 
 ---
@@ -589,11 +580,11 @@ The following procedure can be applied to any AD CS issuing CA to perform a stru
 
 1. Log into the CA server as a PKI administrator account. Confirm login with `whoami` and confirm the CA service is running with `Get-Service CertSvc` and `certutil -ping`.
 
-2. Open pkiview.msc (Windows + R → pkiview.msc). Expand the full tree: Enterprise PKI → Root CA → Issuing CA. Record the color indicator for each node: CA Certificate, AIA Location(s), CDP Location(s), DeltaCRL Location(s), and OCSP Location(s). Note any red or amber indicators and whether they are expected (offline root, unpublished Delta CRL) or unexpected (missing base CRL, unreachable OCSP endpoint).
+2. Open pkiview.msc (Windows + R → pkiview.msc). Expand the full tree: Enterprise PKI → Root CA → Issuing CA. Record the color indicator for each node: CA Certificate, AIA Locations, CDP Locations, DeltaCRL Locations, and OCSP Locations. Note any red or amber indicators and whether they are expected (offline root, unpublished Delta CRL) or unexpected (missing base CRL, unreachable OCSP endpoint).
 
 3. From an elevated PowerShell prompt, publish a fresh CRL: `certutil -CRL`. Confirm the command completes without errors. Return to pkiview.msc, right-click the issuing CA node, and select Refresh. Confirm the CDP row remains green or transitions from amber to green after publishing.
 
-4. Dump the local CRL file to read its validity window: `certutil -dump "C:\Windows\System32\CertSrv\CertEnroll\<CA Name>.crl"`. Record the ThisUpdate and NextUpdate timestamps. Calculate hours remaining until NextUpdate. Flag as WARNING if less than 48 hours remain, CRITICAL if less than 24 hours remain.
+4. Dump the local CRL file to read its validity window: `certutil -dump "C:\Windows\System32\CertSrv\CertEnroll\<CA Name>.crl"`. Record the ThisUpdate and NextUpdate timestamps. Calculate hours remaining until NextUpdate. Record the ThisUpdate and NextUpdate values, then calculate how much time is left before the CRL expires. Treat anything under 48 hours as a warning and anything under 24 hours as critical so it can be addressed before clients start rejecting certificates.
 
 5. Test HTTP CRL accessibility using the certutil URL Retrieval Tool: `certutil -URL "http://<CA hostname>/CertEnroll/<CA Name>.crl"`. Select CRLs (from CDP) and click Retrieve. Confirm Status shows OK for the base CRL. A Failed row for the Delta CRL is expected if Delta CRLs are not published.
 
@@ -605,7 +596,7 @@ The following procedure can be applied to any AD CS issuing CA to perform a stru
 
 9. Calculate expiry threshold dates in PowerShell: `$today = Get-Date`, then `$today.AddDays(30)`, `$today.AddDays(60)`, `$today.AddDays(90)`. Run four certutil -view queries with Disposition=20 and NotAfter filters at each threshold plus today. Record counts at each window and list any certificate CNs found.
 
-10. Compile results into the health check summary table. Flag any signal that is not PASS. Document findings that require follow-up action, including who is responsible and by what date. File the completed report.
+10. Summarize all of the results in the health check report. Highlight any items that need follow-up, explain what action is required, who is responsible for it, and when it should be completed.
 
 ```
 
@@ -616,47 +607,23 @@ The following procedure can be applied to any AD CS issuing CA to perform a stru
 **1. You opened pkiview.msc before running any certutil commands. Describe one thing pkiview told you that you could not have known from certutil alone, and one thing certutil told you that pkiview cannot show. What does this tell you about the role of each tool in a CA health check?**
 
 ```
-pkiview provided a hierarchy-wide visual status that certutil alone cannot produce: it showed
-that the CVI Root CA node itself was in an error state because the offline root CA VM was
-unreachable, and it showed the DeltaCRL Location #1 as red before any commands were run.
-Seeing both signals simultaneously in a single pane of glass — with color coding that
-immediately communicates which CA tier the problem affects — is something certutil commands
-produce only when run individually and interpreted manually. Certutil, by contrast, provided
-information pkiview cannot show at all: the exact NextUpdate timestamp from inside the CRL
-file (7/8/2026 10:38 PM), which allowed a precise calculation of hours remaining until
-expiry. pkiview's CDP row showed green, but it does not expose the CRL validity window
-— it only confirms the CRL could be downloaded. The two tools therefore play complementary
-roles: pkiview is the rapid triage tool that surfaces hierarchy-wide status at a glance,
-while certutil is the precision instrument that reads the content of what was retrieved and
-confirms it is accurate and current.
+One thing pkiview showed immediately was the overall health of the PKI hierarchy. Before running any commands, I could already see that the offline Root CA was marked in red, which was expected, and that the Delta CRL location also showed a warning. Certutil, on the other hand, gave much more detailed information, such as the exact CRL NextUpdate date and time, which allowed me to calculate how long the CRL would remain valid. This showed me that the two tools serve different purposes. pkiview is useful for getting a quick overview of the environment, while certutil is better for checking the details and confirming that everything is working as expected.
 ```
 
 **2. In Part B, you tested OCSP with both a valid and a revoked certificate. pkiview showed the AIA row as green — meaning the OCSP endpoint was reachable. Why is testing with a known-revoked certificate a required step that pkiview cannot replace? What would it mean operationally if the revoked certificate returned a GOOD status instead of REVOKED?**
 
 ```
-pkiview's green AIA indicator confirms only that the OCSP endpoint returned an HTTP response
-— it does not inspect the content of that response or verify that the revocation data inside
+pkiview's green AIA indicator confirms only that the OCSP endpoint returned an HTTP response, it does not inspect the content of that response or verify that the revocation data inside
 it is accurate. An OCSP responder could return well-formed responses for every certificate
 while reading a stale CRL that pre-dates a recent revocation event, and pkiview would
-continue to show green throughout. Testing with a known-revoked certificate closes this gap
-by asking the responder a question with a known correct answer: this certificate was revoked
-on this date, and the response should say Revoked. If the revoked certificate had returned
-GOOD instead, it would mean the OCSP responder was reading a CRL that was published before
-the revocation occurred — operationally, every relying party checking that certificate's
-status would be told it is valid when it is not. Depending on what that certificate was used
-for, this could mean a compromised credential or a decommissioned service endpoint
-continuing to authenticate successfully against systems that trust OCSP responses. The
-damage window lasts until the OCSP responder picks up a fresh CRL that includes the
-revocation, which in this environment is up to seven days. This is precisely why certutil
--URL with a known-revoked certificate is a required accuracy test that no endpoint
-reachability check can substitute for.
+continue to show green throughout. That's why testing with a certificate that is already known to be revoked is so important. If that certificate returned a GOOD status instead of REVOKED, it would mean the OCSP responder was using outdated revocation information, such as an old CRL. As a result, clients could continue trusting a certificate that should no longer be trusted, which would create a serious security risk.
 ```
 
 **3. In Part C, you checked for certificates expiring within 30, 60, and 90 days. pkiview does not show this data. AD CS does not generate any automatic alerts. Given this, what operational discipline is required to prevent a certificate expiry from becoming a service outage — and what would a mature weekly health check routine look like for a CA with 200 issued certificates?**
 
 ```
 Because AD CS generates no automatic expiry alerts, preventing a certificate expiry from
-becoming a service outage requires proactive, scheduled human-initiated queries — the
+becoming a service outage requires proactive, scheduled human-initiated queries, the
 expiration pipeline check must be built into a recurring operational routine rather than
 treated as reactive troubleshooting. The minimum discipline required is running the
 certutil -view queries against 30, 60, and 90-day windows on a fixed schedule, reviewing
@@ -680,48 +647,15 @@ queries over time.
 **4. If you were setting up this health check to run automatically on a weekly schedule, which signal would you consider most urgent to monitor — CRL freshness, OCSP availability, or the expiration pipeline? Explain your reasoning, including what failure in that signal would look like within your first hour of not catching it.**
 
 ```
-CRL freshness is the most urgent signal to monitor on an automated schedule, because its
-failure propagates immediately and silently to every relying party in the environment
-without any visible warning until certificate operations start failing. When a CRL passes
-its NextUpdate timestamp without a fresh CRL being published, every application and system
-that performs CRL-based revocation checking begins rejecting certificate validations — not
-because any certificate is actually invalid, but because the revocation information is
-stale and the client-side revocation checking logic treats an expired CRL as an untrusted
-state. Within the first hour of a missed CRL refresh, any application configured for
-hard-fail revocation checking would begin refusing TLS connections, rejecting smart card
-logons, and blocking code signing validation — all for certificates that are legitimately
-valid. The failure looks indistinguishable from a widespread certificate compromise to end
-users and helpdesk staff, and diagnosing it requires PKI knowledge that most support
-personnel do not have. OCSP availability is important but slightly more recoverable —
-many clients fall back to CRL checking if OCSP times out, and the OCSP responder failure
-affects only clients configured to use it. The expiration pipeline is critical but operates
-on a days-to-weeks timescale, giving at least some window for human intervention. CRL
-freshness has no such grace period — once NextUpdate passes, the impact is immediate
-and broad.
+CRL freshness is the most important signal I would monitor on an automated schedule because an expired CRL can affect every system that relies on the CA to validate certificates. Every CRL contains a NextUpdate timestamp, which tells clients when a newer copy of the CRL should be available. Once that time passes without a new CRL being published, many applications no longer trust the old CRL because it may not contain the latest revocation information. As a result, they may reject certificates that are actually still valid simply because they cannot verify whether those certificates have been revoked.
+The impact can spread very quickly across the environment. Services that rely on certificate validation, such as HTTPS websites, VPNs, smart card logons, or code signing verification, may begin failing even though nothing is wrong with the certificates themselves. To users and helpdesk staff, it can look like there has been a major certificate failure or even a security breach, when the real issue is simply that the CA did not publish a new CRL before the previous one expired.
+Although OCSP availability is also important, many clients can fall back to CRL checking if the OCSP responder is temporarily unavailable, making it slightly more forgiving. The certificate expiration pipeline is also critical, but certificates usually expire over days or weeks, giving administrators time to identify and renew them before they cause an outage. CRL freshness is different because there is very little warning once the NextUpdate time has passed. Monitoring it automatically helps detect the problem early and allows administrators to publish a new CRL before users begin experiencing widespread certificate validation failures.
 ```
 
 **5. pkiview.msc has been a standard tool in Windows Server AD CS since 2003. Enterprise CLM platforms like Keyfactor provide richer dashboards that automate much of what you did manually in this lab. Based on what you observed in this lab, what does pkiview show that a newer platform dashboard would also need to show — and what would a platform need to add to go beyond what pkiview and certutil provide manually?**
 
 ```
-pkiview provides three things that any successor platform would also need to surface: the
-CA hierarchy structure showing each CA tier and its relationship to the others, the
-per-CA status of each published extension location (CDP, AIA, OCSP, DeltaCRL) with a clear
-pass/fail indicator for each URL, and the CA certificate expiry date for each CA in the
-hierarchy. These are the baseline visibility requirements for any CA health dashboard —
-without them, an administrator cannot determine at a glance whether the PKI infrastructure
-is structurally sound. To go meaningfully beyond what pkiview and certutil provide manually,
-a platform would need to add several capabilities that neither tool offers. Automated
-scheduling and alerting would replace the human-initiated weekly query cycle — the platform
-would run the equivalent of the certutil -view expiration queries on a schedule and push
-notifications to certificate owners without requiring an administrator to initiate the check.
-Historical trending would show whether CRL publication latency is increasing over time,
-whether the revoked certificate count is growing at an expected rate, and whether the
-expiration pipeline is being managed or accumulating backlogs. Certificate inventory
-integration would map each issued certificate to the service, application, or device it
-protects, making the expiration query output actionable rather than just a list of CNs and
-dates. Finally, OCSP response accuracy monitoring — the equivalent of the certutil -URL
-test with a known-revoked certificate — would run continuously rather than at weekly
-intervals, catching a stale-CRL OCSP accuracy failure within minutes rather than days.
+From this lab, I found that pkiview provides a quick overview of the PKI environment by showing the CA hierarchy, the health of the CDP, AIA, OCSP, and Delta CRL locations, and whether the CA certificates are still valid. Any modern PKI management platform should be able to provide this same information in an easy-to-read dashboard. To go beyond what pkiview and certutil provide, the platform should also include automatic health checks, certificate expiration alerts, historical reporting, and a complete inventory showing which certificates belong to which systems or applications. It should also monitor OCSP responses automatically so problems can be detected before users are affected.
 ```
 
 ---
