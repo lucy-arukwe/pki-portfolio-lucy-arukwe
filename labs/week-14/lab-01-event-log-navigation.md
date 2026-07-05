@@ -124,11 +124,7 @@ Active Directory Certificate Services for CVI Issuing CA 1 was started.  DC=DC01
 
 What this event represents (in your own words):
 ```
-The CA service (CertSvc) successfully started on PKI-SRV01 and completed its initialization,
-including re-establishing its connection to the Active Directory domain controller DC01. This
-event is logged every time the CA service comes online, whether from a scheduled restart,
-a manual start, or a recovery following an error condition. In this case it followed the
-Week 13 restore lab, confirming the CA was operational after the database was recovered.
+This event shows that the CA service started successfully on PKI-SRV01 and reconnected to the Active Directory domain controller, DC01. In other words, the CA was back online and ready to issue and manage certificates again. This event is recorded whenever the CA service starts, whether after a restart, maintenance, or recovery. In this case, it happened after the Week 13 restore lab, confirming that the database had been restored successfully and the CA was working normally again.
 ```
 
 ---
@@ -152,11 +148,7 @@ Active Directory Certificate Services for CVI Issuing CA 1 was stopped.
 
 What this event represents:
 ```
-The CA service was cleanly shut down on PKI-SRV01. Event 38 is the expected counterpart to
-Event 26 — together they bracket a CA service lifecycle. A stop event logged shortly before
-a start event (as seen here, with Event 38 at 8:15 PM and Event 26 at 9:35 PM the same
-evening) indicates the CA was taken offline, worked on, and then brought back up — consistent
-with the recovery and restore operations performed during Week 13 labs.
+This event shows that the CA service was shut down normally on PKI-SRV01. Event 38 goes hand in hand with Event 26, which records when the CA service starts. Looking at both events together makes it easy to see when the CA was taken offline and when it came back online. In this case, the shutdown happened before the Week 13 recovery work, and the later startup event confirmed that the restore was completed successfully and the CA was running normally again.
 ```
 
 ---
@@ -217,12 +209,7 @@ Source: CertificationAuthority
 Description: The "Windows default" Policy Module logged the following warning: The Active
 Directory connection to DC01.corp.cvilab.local has been reestablished to DC01.corp.cvilab.local.
 
-What this event represents: The CA's Policy Module detected that its connection to the domain
-controller DC01 had been interrupted and then successfully re-established. The Policy Module
-uses the AD connection to validate certificate requests against AD attributes and to publish
-issued certificates to the directory. A reestablishment warning indicates the CA temporarily
-lost domain connectivity — likely during a CA service restart or brief network interruption
-in the lab environment — and then recovered without requiring administrator intervention.
+What this event represents: This event shows that the CA temporarily lost its connection to the domain controller but was able to reconnect successfully. The CA depends on Active Directory to validate certificate requests and publish certificates, so reconnecting was important for normal operation. This most likely happened during a service restart or a brief network interruption in the lab. Since the connection came back on its own, no manual action was needed.
 ```
 ---
 
@@ -233,12 +220,7 @@ Description: An Authority Key Identifier was passed as part of the certificate r
 This feature has not been enabled. To enable specifying a CA key for certificate signing,
 run: "certutil -setreg ca\UseDefinedCACertInRequest 1" and then restart the service.
 
-What this event represents: The CA received a certificate request (Request ID 16) that
-included an Authority Key Identifier extension, which would instruct the CA to sign the
-issued certificate using a specific CA key. This feature is disabled on CVI Issuing CA 1 by
-default, so the CA logged a warning and processed the request using its standard signing key
-instead. This was observed during Week 11 OCSP lab work when certificate requests were
-submitted with explicit AKI values.
+What this event represents: This warning shows that the CA received a certificate request containing an Authority Key Identifier (AKI), but that feature wasn't enabled on this CA. Instead of using the requested CA key, it continued using its default signing key and completed the request normally. I came across this during the Week 11 OCSP lab, where the certificate request included an AKI value that the CA wasn't configured to use.
 ```
 
 ---
@@ -557,17 +539,7 @@ Answer the following questions using the event log data from Part A and the cert
 Select **one event log entry** from Part A (any event type). In 3–5 sentences, explain what this event tells you about the CA's operational state at the time it was generated. Be specific about what action caused the event and what the event confirms about the CA.
 
 ```
-Event ID 17 (Error), logged at 6/18/2026 9:18:24 PM, tells a precise story about the CA's
-state at that moment: the CertSvc service attempted to start, opened the Windows ESE database
-engine, and immediately failed when the engine returned error JET_errFileNotFound
-(0xc8000713), meaning the primary database file (.edb) was absent from the expected path on
-disk. This failure occurred because the CA database files had been deliberately removed as
-part of the Week 13 Lab 03 recovery simulation, leaving the service with no database to
-attach to. The event confirms that the CA was entirely non-functional at 9:18 PM — it could
-not issue, sign, or process any certificate request — because the entire certificate record
-store was unavailable. The presence of Event 26 (CA started successfully) at 9:35 PM in the
-same log confirms that the database was successfully restored within approximately 17 minutes
-of this failure, after which the CA returned to normal operation.
+Event ID 17 (Error), logged at 6/18/2026 9:18:24 PM, shows that the CA tried to start but couldn't because the database file was missing. This happened during the Week 13 recovery lab when the database files were deliberately removed to simulate a failure. Since the CA depends on its database to store certificate records and process requests, it couldn't issue or manage any certificates while the database was unavailable. A few minutes later, Event ID 26 confirmed that the database had been restored successfully, the CA started normally, and certificate services were available again
 ```
 
 ### Analysis Question 2
@@ -575,18 +547,7 @@ of this failure, after which the CA returned to normal operation.
 Select **one certificate record** from Part B. In 3–5 sentences, explain what this record tells you about the lifecycle of that specific certificate. Include the template used, who requested it, its current status, and what you would need to do next if the certificate were approaching expiry.
 
 ```
-Certificate Record 1 (Request ID 3) documents the complete lifecycle of a web server
-certificate issued to CN=webserver.corp.cvilab.local. The certificate was requested by
-CORP\pki.admin on 5/13/2026 using the CVI-WebServer template, which grants Server
-Authentication capability and is designed for machine-facing TLS endpoints. The CA issued it
-immediately upon submission, with a validity window running from 5/13/2026 to 4/25/2027,
-but the certificate never reached its natural expiry — CORP\pki.admin revoked it on
-5/16/2026 with reason Cessation of Operation, indicating the endpoint or role that certificate
-served was being decommissioned rather than replaced. If this certificate were still active and
-approaching its 4/25/2027 expiry, the correct action would be to enroll a replacement using
-the same CVI-WebServer template well before the expiry date, install the new certificate on
-the target endpoint, and then revoke the expiring certificate with reason Superseded to
-ensure it is properly reflected in the CRL before it naturally expires.
+Certificate Record 1 (Request ID 3) shows the full lifecycle of a web server certificate issued to **webserver.corp.cvilab.local**. It was requested by **CORP\pki.admin** using the **CVI-WebServer** template and was issued with a validity period from 5/13/2026 to 4/25/2027. However, the certificate was revoked before it reached its expiry date because the reason given was **Cessation of Operation**, meaning the server or service using it was no longer needed. If this certificate were still active and close to expiring, I would request a replacement certificate using the same template, install it on the server, and then revoke the old certificate with the reason **Superseded** after confirming the new one was working properly.
 ```
 
 ### Analysis Question 3
@@ -594,23 +555,7 @@ ensure it is properly reflected in the CRL before it naturally expires.
 In 4–6 sentences, explain how the Application event log and the CA certificate database complement each other as operational data sources. Give a specific example scenario where you would need to consult **both** sources to fully understand what happened — and explain why one source alone would be insufficient.
 
 ```
-The Application event log and the CA certificate database record fundamentally different
-dimensions of CA activity: the event log captures what happened to the CA service itself —
-starts, stops, errors, and policy module warnings — while the certificate database records
-what the CA did on behalf of requesters — which certificates were issued, to whom, under
-which templates, and whether they were later revoked and why. Neither source alone provides
-a complete operational picture, which is why both must be consulted together for root cause
-analysis. Consider a scenario where a relying party reports that a certificate they received
-is suddenly being rejected as untrusted. The certificate database would show that the
-certificate was revoked (Disposition 21), by whom, on what date, and with what reason code,
-confirming that the rejection is legitimate and intentional. But the event log might reveal
-that the CA service was stopped and restarted just before the revocation was recorded —
-which, when combined with the database record, could indicate that an administrator noticed
-an error condition, restarted the service to recover, and then immediately revoked a
-certificate that may have been issued incorrectly during that error window. Without the event
-log, the revocation appears routine; without the certificate database, the restart appears
-routine — only together do they reveal that the revocation was a direct response to a
-detected service anomaly.
+The Application event log and the CA certificate database work together, but they record different types of information. The Application log shows what was happening with the CA service itself, such as when it started, stopped, or encountered an error. The CA database records the certificate activity, including who requested a certificate, which template was used, whether it was issued or revoked, and the reason for the revocation. For example, if a user reports that their certificate is no longer trusted, I would check the CA database to confirm whether it was revoked and why, then review the Application log to see if there were any service failures or other issues around the same time. Looking at both sources together gives a much clearer picture of what happened than relying on just one of them.
 ```
 
 ---
@@ -625,7 +570,7 @@ Answer each question in complete sentences.
 Event ID 26 (CA service started) and Event ID 38 (CA service stopped) were the most
 frequently occurring event types in the filtered view, with the two together accounting for
 the majority of the 75 CertificationAuthority events present in the log. This frequency
-reflects the nature of the lab environment rather than a production pattern — each lab
+reflects the nature of the lab environment rather than a production pattern, each lab
 exercise that involved restarting CertSvc, recovering the CA database, or taking snapshots
 generated a new start/stop pair, so the cumulative count grew across twelve weeks of lab
 work. In a production environment, service lifecycle events should be rare and would stand
@@ -637,59 +582,19 @@ instability.
 **2. The certutil -view command queries the CA database, not the event log. What is the difference between what these two sources record — and what would you lose operationally if you had access to the event log but not the CA database?**
 
 ```
-The event log records the operational health and lifecycle of the CA service itself —
-when it started, when it stopped, when it encountered errors, and when its infrastructure
-components (such as its AD connection) experienced disruptions. The CA database, by contrast,
-records every certificate transaction: the identity of the requester, the template used, the
-subject name, the validity period, the serial number, and the revocation status of every
-certificate the CA has ever issued. Without the CA database, an administrator would have no
-way to answer fundamental operational questions: which certificates are currently active,
-which have been revoked and why, how many certificates are approaching expiry, whether a
-specific user or machine has an active certificate, or what the full issuance history of the
-CA looks like. The event log can tell you the CA was running at 9:35 PM, but only the
-database can tell you what the CA issued while it was running. Losing the database would
-mean losing the authoritative record of the CA's entire certificate inventory — something
-that cannot be reconstructed from event logs alone.
+The Application event log and the CA database record different kinds of information. The event log shows what was happening with the CA service itself, such as when it started, stopped, or encountered errors. The CA database keeps track of certificate activity, including who requested a certificate, which template was used, whether it was issued or revoked, and its current status. If I only had access to the event log, I would know the CA was running, but I wouldn't know which certificates had been issued, revoked, or who they belonged to. Without the CA database, I would lose the complete history of the certificates managed by the CA.
 ```
 
 **3. In the Disposition field, you saw codes 20 (Issued) and 21 (Revoked). If a certificate shows Disposition 21, what additional fields should you check to understand the full context of the revocation, and why?**
 
 ```
-When a certificate shows Disposition 21, four additional fields provide the context needed
-to understand the revocation fully. The Revocation Date field establishes when the revocation
-took effect, which determines whether relying parties checking the CRL after that time would
-have been denied trust — critical for assessing whether any harm occurred in the window
-between issuance and revocation. The Effective Revocation Date matters separately from the
-Revocation Date because it can be backdated, meaning the revocation is treated as having
-occurred earlier than when it was actually entered; this is particularly important for Key
-Compromise revocations. The Revocation Reason code (such as 0x0 Unspecified, 0x1 Key
-Compromise, or 0x5 Cessation of Operation) tells you why the certificate was revoked, which
-has audit and legal implications — a Key Compromise revocation carries significantly more
-urgency and follow-up requirements than a Cessation of Operation revocation. Finally, the
-Request Disposition Message field often records who performed the revocation
-("Revoked by CORP\pki.admin"), establishing accountability and confirming the action was
-authorized rather than automated. Together these fields transform a disposition code into a
-complete revocation narrative.
+If a certificate has a Disposition value of 21 (Revoked), I would check the Revocation Date, Effective Revocation Date, Revocation Reason, and the Request Disposition Message. The Revocation Date tells me when the certificate was revoked, while the Effective Revocation Date shows when that revocation takes effect, which can sometimes be different. The Revocation Reason explains why the certificate was revoked, such as Key Compromise or Cessation of Operation. Finally, the Request Disposition Message can show who performed the revocation, providing accountability and helping explain the circumstances behind the action. Looking at all of these fields together gives a complete picture of why and when the certificate was revoked.
 ```
 
 **4. The Application event log records CA events by default. The Security event log does not record CA events without additional configuration (covered in Lesson 3). Based on what you found in Part A, what operational information is present in the Application log — and what is absent that would be important in a production environment?**
 
 ```
-The Application event log captures CA service lifecycle events (start, stop, failure to
-start), infrastructure connectivity events (AD connection loss and reestablishment), policy
-module warnings (such as the Authority Key Identifier warning in Event 128), and DCOM
-registration errors. This provides a solid record of whether the CA was running and whether
-its core dependencies were healthy. What is notably absent from the Application log is any
-record of individual certificate operations: there are no events for certificate issuance,
-no events for certificate revocation, no events recording which accounts requested which
-certificates, and no events capturing CRL publication activity. In a production environment
-these omissions are significant — a security team investigating a suspected unauthorized
-certificate issuance would find no evidence in the Application log, because that log does
-not record who requested certificates or what was issued. The Security event log, once
-configured with the appropriate audit policies (covered in Lesson 3), fills this gap by
-recording enrollment requests, approvals, and revocations as auditable security events
-tied to specific identities. Without Security log auditing, the CA has no per-transaction
-accountability trail, only a service-level health log.
+The Application event log records information about the health and operation of the CA service, including service start and stop events, startup failures, Active Directory connectivity, and warning messages. From these events, I can tell whether the CA is running properly and whether any operational issues have occurred. However, the Application log does not record individual certificate actions, such as who requested a certificate, which certificates were issued or revoked, or who performed those actions. In a production environment, this information is essential for auditing and investigations. That's why Security log auditing is important—it provides a record of certificate requests, approvals, and revocations that the Application log does not capture.
 ```
 
 ---
