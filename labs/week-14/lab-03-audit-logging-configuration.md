@@ -524,42 +524,42 @@ All three event types (4887, 4870, 4872) are confirmed present in the Security l
 **1. The AuditFilter value 0xCC enables four categories. List the four categories and their individual hex values that combine to produce 0xCC. (Hint: 0xCC = 0x4 + 0x8 + 0x40 + 0x80)**
 
 ```
-(0xCC = 0x4 + 0x8 + 0x40 + 0x80
+The AuditFilter value of 0xCC is made up of four audit categories:
 
-0x4  (4)   — Certificate Issuance: logs when the CA approves and issues a certificate,
-              producing Event 4887. Records the requester identity, request ID, template,
-              subject, and SKI.
+a. 0x4 (Certificate Issuance) – Records when the CA approves and issues a certificate. This creates Event ID 4887 and includes useful information such as the requester, certificate template, Request ID, and subject.
 
-0x8  (8)   — Certificate Revocation: logs when a certificate is revoked, producing
-              Event 4870. Records the serial number and revocation reason code.
+b. 0x8 (Certificate Revocation) – Records when a certificate is revoked. This creates Event ID 4870 and includes details such as the certificate serial number and the reason for the revocation.
 
-0x40 (64)  — CA Configuration Changes: logs when the CA's configuration registry values
-              are modified, producing Event 4876. Records what setting was changed and
-              by whom — essential for detecting unauthorized CA reconfiguration.
+c. 0x40 (CA Configuration Changes) – Records changes made to the CA's configuration, such as registry settings. These events help administrators track who made changes and when they were made.
 
-0x80 (128) — CA Key Operations: logs private key operations such as key archival and
-              key recovery, producing Event 4893 and related events. Records who performed
-              the operation and which key was involved.
+d. 0x80 (CA Key Operations) – Records important operations involving the CA's private keys, such as key archival and key recovery. These events are useful for monitoring sensitive key management activities.
 
-Combined: 4 + 8 + 64 + 128 = 204 = 0xCC
+When these four values are added together (4 + 8 + 64 + 128), the result is 204, which is 0xCC in hexadecimal.
 ```
 
 **2. You configured Audit Object Access in Local Security Policy as a required second step. Why was the AuditFilter change alone insufficient to produce Security log events? What does the Local Security Policy setting control?**
 
 ```
-(your answer here)
+Changing the AuditFilter alone was not enough because it only tells the Certification Authority which events it should generate. Windows also needs to know that those events are allowed to be written to the Security log. That is why enabling Audit Object Access in the Local Security Policy is also required.
+
+If only the AuditFilter is configured, the CA is ready to generate audit events, but Windows will not record them in the Security log. Likewise, if only Audit Object Access is enabled but the AuditFilter remains disabled, there are no CA audit events for Windows to record. Both settings must be enabled for Security log events such as certificate issuance, revocation, and CRL publication to appear.
 ```
 
 **3. Event 4887 (Certificate Issued) includes the Requester Name, Certificate Template, and Serial Number. Compare this to what you found in the Application event log in Lab 01. What information does Event 4887 provide that the Application log does not — and why does that matter for an audit trail?**
 
 ```
-(your answer here)
+Event 4887 provides much more detailed information than the Application log. It records who requested the certificate, which certificate template was used, the Request ID, the certificate subject, and other details that uniquely identify the certificate that was issued.
+
+In Lab 01, the Application log mainly showed what was happening with the CA service itself, such as service starts, shutdowns, and operational warnings. It did not record which user requested a certificate or what certificate was issued. That extra information in Event 4887 is important because it creates a proper audit trail, making it possible to trace every certificate back to the person who requested it and verify exactly what the CA issued.
+
 ```
 
 **4. You enabled audit logging for four categories (0xCC). The full set of categories would be 0xFF. In a production CA issuing 500 certificates per day, what would be the operational consequence of enabling all categories (0xFF) vs. only the production minimum (0xCC)? What specific high-volume category would you likely want to exclude?**
 
 ```
-(your answer here)
+Using the full AuditFilter value of 0xFF would cause the CA to record every available audit category. On a busy production CA issuing hundreds of certificates each day, this would generate a very large number of Security log events. While this provides more information for investigations, it also increases log storage requirements and makes it more difficult to find important events among the large volume of data.
+
+Using the production minimum of 0xCC focuses on the most important security-related activities, such as certificate issuance, revocation, configuration changes, and key operations. This provides a useful audit trail without generating unnecessary log entries. One category that would often be excluded is CA service start and stop events (0x1), since these can occur regularly during maintenance or planned restarts and may create additional log noise without providing much value during normal operations.
 ```
 
 ---
@@ -569,41 +569,47 @@ Combined: 4 + 8 + 64 + 128 = 204 = 0xCC
 **1. Explain why both the CA AuditFilter setting and the Local Security Policy Audit Object Access setting are required for Security log events to appear. What happens if only one of the two is configured?**
 
 ```
-(your answer here)
+Both settings are required because they perform two different jobs. The AuditFilter tells the Certification Authority which activities should be audited, such as certificate issuance, certificate revocation, CRL publication, and configuration changes. The Local Security Policy setting (Audit Object Access) tells Windows that these audit events are allowed to be written to the Security log.
+If only the AuditFilter is configured, the CA can generate audit events, but Windows will not record them in the Security log. If only Audit Object Access is enabled, Windows is ready to record events, but the CA is not generating any audit events to send. Both settings have to work together before Security log events like Event 4887, 4870, and 4872 will appear.
 ```
 
 **2. A junior administrator tells you: "I can see CRL publication events in the Application log, so I know the CA is being audited." What is wrong with this statement, and what would you tell them to check to determine whether the CA is producing a proper security audit trail?**
 
 ```
-(your answer here)
+That statement is not completely accurate because seeing CRL publication events in the Application log only confirms that the CA is recording operational activity. It does not mean that a full security audit trail is being created. The Application log mainly shows events such as service starts, stops, warnings, and CRL publication, but it does not provide the detailed information needed to show who requested, issued, or revoked a certificate.
+To confirm that proper CA auditing is enabled, I would check that the AuditFilter is configured correctly and that Audit Object Access is enabled in the Local Security Policy. I would also review the Security log for events such as Event 4887 for certificate issuance, Event 4870 for certificate revocation, and Event 4872 for CRL publication. These Security log events provide the detailed record needed to trace certificate activity and identify who performed each action.
 ```
 
 **3. The AuditFilter value 0xCC does not include CA service start/stop events (0x1) or backup/restore events (0x2). In what operational scenario would you add these categories — and what would you be looking for in those events?**
 
 ```
-(your answer here)
+I would consider enabling the additional audit categories during activities such as scheduled maintenance, troubleshooting, disaster recovery testing, or when investigating a security incident. Recording CA service start and stop events (0x1) would help confirm exactly when the service was taken offline, restarted, or unexpectedly stopped. Backup and restore events (0x2) would also be useful because they create a record whenever the CA database or configuration is backed up or restored.
+These events can help administrators build a timeline of what happened during an incident. For example, if the CA suddenly stopped working after a restore, the audit logs could confirm when the restore took place, who performed it, and whether the service restarted successfully afterwards. Although these categories are not always necessary for everyday operations, they become very valuable when troubleshooting problems or investigating unexpected changes.
+
 ```
 
 ---
 
 ## Submission Checklist
 
-- [ ] Logged in as CORP\pki.admin — whoami output included
-- [ ] Pre-configuration AuditFilter value documented (certutil -getreg output)
-- [ ] Pre-configuration Audit Object Access state documented
-- [ ] Pre-configuration Security log check performed (no CA events)
-- [ ] certutil -setreg CA\AuditFilter 0xCC output included
-- [ ] CA service restarted — net stop/start output included
-- [ ] Post-configuration certutil -getreg confirms 0xCC (204)
-- [ ] Audit Object Access enabled — auditpol /get output confirms Success and Failure
-- [ ] Test certificate issued — Request ID and Serial Number recorded
-- [ ] Test certificate revoked with reason code 5 — certutil -revoke output included
-- [ ] CRL published — certutil -CRL output included
-- [ ] Event 4887 (Issued) located and documented — timestamp and key fields recorded
-- [ ] Event 4870 (Revoked) located and documented — timestamp and key fields recorded
-- [ ] Event 4872 (CRL Published) located and documented — timestamp recorded
-- [ ] Event Viewer screenshot or full message content provided for all three events
-- [ ] Before/after comparison table completed
-- [ ] All four Part E analysis questions answered
-- [ ] All three lab report questions answered in complete sentences
-- [ ] File committed to `labs/week-14/lab-03-audit-logging-configuration.md`
+## Submission Checklist
+
+- [x] Logged in as CORP\pki.admin — whoami output included
+- [x] Pre-configuration AuditFilter value documented (key absent — certutil -getreg output included)
+- [x] Pre-configuration Audit Object Access state documented (auditpol and secpol.msc)
+- [x] Pre-configuration Security log check performed (no CA events)
+- [x] certutil -setreg CA\AuditFilter 0xCC output included
+- [x] CA service restarted — net stop/start output included
+- [x] Post-configuration certutil -getreg confirms 0xCC (204)
+- [x] Audit Object Access enabled — auditpol /get output confirms Success and Failure
+- [x] Test certificate issued — Request ID 21 and Serial Number recorded
+- [x] Test certificate revoked with reason code 5 — certutil -revoke output included
+- [x] CRL published — certutil -CRL output included
+- [x] Event 4887 (Issued) located and documented — timestamp and key fields recorded
+- [x] Event 4870 (Revoked) located and documented — timestamp and key fields recorded
+- [x] Event 4872 (CRL Published) located and documented — timestamp recorded
+- [x] Event Viewer filtered view documented — all four events (two 4872, one 4870, one 4887)        confirmed
+- [x] Before/after comparison table completed
+- [x] All four Part E analysis questions answered
+- [x] All three lab report questions answered in complete sentences
+- [x] File committed to `labs/week-14/lab-03-audit-logging-configuration.md`
