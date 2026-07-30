@@ -1,0 +1,57 @@
+# CLM Compliance Report
+Generated: 7/29/2026, 11:19:01 PM
+Student: arukwelucyu
+
+## Fleet Summary
+- Total certificates: 15
+- Certificates with violations: 9
+- Auto-remediated this session: 4
+- Awaiting manual review: 5
+
+## Violations by severity
+- High: 11
+- Medium: 4
+- Low: 6
+
+## Zone breakdown
+- Web Servers: 2 certs, 2 failing — rule: CA-issued, ≥2048-bit key, owner tagged
+- Service Accounts: 3 certs, 1 failing — rule: CA-issued, ≥2048-bit key, owner tagged, rotated within 1 year
+- Network / Remote Access: 1 certs, 0 failing — rule: Trusted CA, ≥2048-bit key, owner tagged
+- Unmanaged / Legacy: 5 certs, 5 failing — rule: Must be migrated to Corp CA and re-issued with a modern key
+- Other: 4 certs, 1 failing — rule: Baseline enterprise policy: valid CA, ≥2048-bit key, owner tagged, expiry >30d
+
+## Expiration pipeline
+- Next 30 days: 1
+- 31–60 days: 1
+- 61–90 days: 1
+
+## CA health
+- Corp Issuing CA: CRL WARNING (in 32h); OCSP reachable/accurate; 7 certs
+- Self-Signed: CRL EXPIRED (12h past due); OCSP unreachable; 5 certs
+- Corp Root CA: CRL PASS (in 243h); OCSP reachable/accurate; 1 certs
+- Let's Encrypt: CRL PASS (in 113h); OCSP reachable/accurate; 2 certs
+
+## Remediation actions taken
+- Renewed jenkins.corp.cvilab.local via Corp Issuing CA
+- Renewed svc-report-generator via Corp Issuing CA (owner auto-tagged)
+- Renewed www.cvilab.local via Corp Issuing CA
+- Renewed portal.cvilab.local via Corp Issuing CA
+
+## Active alerts
+- [CRITICAL] CRL for Self-Signed is past NextUpdate — clients will begin failing validation. Republish immediately.
+- [CRITICAL] OCSP responder for Self-Signed unreachable — revoked certificates may be silently accepted (soft-fail).
+- [WARNING] CRL for Corp Issuing CA expires in 32 hours — schedule republish.
+- [WARNING] 1 certificate(s) expire within 30 days with no auto-renewal configured.
+- [WARNING] 5 certificate(s) still require manual review from the Policy tab (self-signed / weak key).
+
+## Reflection
+Submitted: 7/29/2026, 11:18:54 PM
+
+Q1: Which certificate posed the biggest risk to this fleet, and why?
+old-wiki.corp.cvilab.local. It scored 100, the highest in the fleet. It's self-signed, has a weak 1024-bit key, no owner, and expires in 30 days. Other certificates have some of these problems, but this one has all of them at the same time. When it expires there's nobody assigned to catch it, and even renewing it won't fix the self-signed and weak key issues underneath.
+
+Q2: Why couldn't the self-signed or weak-key certificates be auto-remediated?
+Auto-remediation can renew a certificate or add a missing owner tag because those don't need a judgment call. Self-signed and weak-key problems are different. Fixing them means deciding if the device or service behind the certificate is even legitimate enough to trust. A script can't tell if an unowned kiosk or IoT sensor is real and still in use. That's why those five certificates went to manual review instead of getting fixed automatically.
+
+Q3: If paged about a CRL nearing its NextUpdate, what would you check first?
+I would open pkiview.msc first to see which CA is flagged. Then I would run certutil -dump on that CA's CRL to get the exact NextUpdate time and how many hours are left. Next I'd check if a new CRL is already scheduled to publish before that deadline, or if I need to force it with certutil -CRL. I'd also check the OCSP responder for that same CA, since a CRL about to expire and a broken OCSP responder together is worse than either one alone.
